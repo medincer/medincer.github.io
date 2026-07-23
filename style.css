@@ -39,7 +39,7 @@ a {
 
 .app-container {
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 32px;
