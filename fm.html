@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futbol Menajeri</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .game-container {
+      width: 100%;
+      max-width: 480px; /* Mobilde varsayılan genişlik */
+    }
+
+    /* MASAÜSTÜ İÇİN İKİ SÜTUNLU DÜZEN */
+    @media (min-width: 768px) {
+      .game-container {
+        max-width: 960px; /* Masaüstünde çift sütun için genişletildi */
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Sol ve Sağ eşit iki sütun */
+        gap: 24px;
+        align-items: start;
+      }
+
+      .left-column, .right-column {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    .card-box {
+      border: 1px solid #ffffff;
+      padding: 12px;
+      margin-bottom: 20px;
+      background-color: #000000;
+      border-radius: 4px;
+    }
+
+    .card-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .sub-text {
+      color: #aaaaaa;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .editable-team {
+      color: #2ecc71;
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    #play-btn {
+      background: none;
+      border: none;
+      color: #2ecc71;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    #reset-btn {
+      background: none;
+      border: none;
+      color: #e74c3c;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .timer-line {
+      font-size: 15px;
+      color: #2ecc71;
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-ball {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background-color: #2ecc71;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #2ecc71;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.2; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    #commentary-box {
+      height: 130px;
+      overflow-y: auto;
+      border-top: 1px dashed #444;
+      padding-top: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    #commentary-box p {
+      margin: 4px 0;
+    }
+
+    .section-title, .league-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .divider {
+      border: 0;
+      border-top: 1px solid #555;
+      margin: 6px 0 10px 0;
+    }
+
+    .player-row, .table-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .player-info {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .hash-tag {
+      color: #2ecc71;
+      font-weight: bold;
+      width: 12px;
+      display: inline-block;
+    }
+
+    .price, .action-links a, .sell-btn {
+      color: #2ecc71;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .action-links {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .team-stats {
+      margin: 15px 0;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .highlighted {
+      color: #2ecc71;
+      font-weight: bold;
+    }
+
+    .align-right {
+      text-align: right;
+    }
+
+    .starter-count {
+      font-size: 12px;
+      color: #2ecc71;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+
+    <!-- MAÇ ANLATIMI -->
+    <div class="left-column">
+      <!-- MAÇ ANLATIM KUTUSU -->
+      <div class="card-box">
+        <div id="match-view">
+          <div class="card-title">Maç Haftası: <span id="week-display">1</span>/22</div>
+          <p class="score-line">
+            <span id="my-team-name-score" class="editable-team" onclick="changeTeamName()" title="Takım ismini değiştirmek için tıkla">Anadolu Kaplanları</span> 
+            <span id="home-score">0</span> - <span id="away-score">0</span> <span id="opponent-name-score">Kadıköy SK</span>
+          </p>
+          <p class="sub-text" id="opponent-info-display">
+            Sıradaki Maç: Kadıköy SK<br>Yetenek: -- &nbsp;&nbsp; Form: %--
+          </p>
+          
+          <div class="action-btn-group">
+            <button id="play-btn" onclick="handlePlayButtonClick()">Maçı Oyna</button>
+            <button id="reset-btn" onclick="resetGame()">Resetle</button>
+          </div>
+        </div>
+
+        <!-- CANLI ANLATIM -->
+        <div id="commentary-section" style="display: none; margin-top: 10px;">
+          <div class="timer-line">
+            <span id="status-ball" class="live-ball"></span>
+            Dakika: <span id="match-minute">0</span>'
+          </div>
+          <div id="commentary-box"></div>
+        </div>
+      </div>
+
+      <!-- OYUNCU LİSTESİ -->
+      <div class="section-title">
+        <span>Oyuncular (<span id="player-count">18</span>/18) <span class="starter-count">#<span id="selected-count">11</span>/11</span></span>
+        <span class="align-right">Ytn &nbsp; Form &nbsp; Sat</span>
+      </div>
+      <hr class="divider">
+      
+      <div class="player-list" id="player-list-container">
+        <!-- Oyuncular JS ile Oluşturulacak -->
+      </div>
+
+      <div class="team-stats" id="team-stats-display">Yetenek: -- &nbsp;&nbsp; Form: %--</div>
+    </div>
+
+    <div class="right-column">
+      <!-- TRANSFER KUTUSU -->
+      <div class="card-box">
+        <div class="card-title">Transferler &nbsp;&nbsp; Bütçe: $<span id="budget-display">450</span></div>
+        <p class="sub-text" style="color:#e0e0e0;" id="transfer-candidate-info">
+          <!-- JS ile Tek Oyuncu Bilgisi Gelecek -->
+        </p>
+        <div class="action-links">
+          <a href="#" id="buy-btn" onclick="buyCurrentPlayer(); return false;">Satın Al</a>
+          <a href="#" onclick="nextTransferCandidate(); return false;" style="color:#aaaaaa;">Sıradaki Aday &raquo;</a>
+        </div>
+      </div>
+
+      <!-- LİG TABLOSU -->
+      <div class="league-header">
+        <span># &nbsp; Takım</span>
+        <span class="align-right">Ave &nbsp; Pu</span>
+      </div>
+      <hr class="divider">
+      <div class="league-table" id="league-table-container">
+        <!-- Tablo JS ile Dinamik Dolacak -->
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // VARSAYILAN BAŞLANGIÇ VERİLERİ
+    const defaultMyTeamName = "Anadolu Kaplanları";
+    const defaultBudget = 450;
+    const defaultCurrentWeek = 1;
+
+    const defaultTeams = [
+      { id: 0, name: "Anadolu Kaplanları", skill: 39, fitness: 80, isUser: true, gf: 0, ga: 0, pts: 0 },
+      { id: 1, name: "Kadıköy SK", skill: 48, fitness: 85, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 2, name: "Boğaz Fırtınası", skill: 45, fitness: 82, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 3, name: "Karadeniz Gücü", skill: 52, fitness: 88, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 4, name: "Başkent Birlik", skill: 41, fitness: 75, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 5, name: "Ege Yıldızları", skill: 43, fitness: 78, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 6, name: "Toros Spor", skill: 37, fitness: 72, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 7, name: "Marmara Gençlik", skill: 35, fitness: 70, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 8, name: "Körfez FK", skill: 38, fitness: 74, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 9, name: "Güneydoğu Yıldızı", skill: 32, fitness: 68, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 10, name: "Trakya Spor", skill: 34, fitness: 65, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 11, name: "Anadolu İdman Yurdu", skill: 30, fitness: 60, isUser: false, gf: 0, ga: 0, pts: 0 }
+    ];
+
+    const defaultPlayers = [
+      { id: 1, name: "Lukas Morat", skill: 3, fitness: 8, value: 120, selected: true },
+      { id: 2, name: "Mateo Kovasik", skill: 4, fitness: 7, value: 140, selected: true },
+      { id: 3, name: "Ibrahima Konte", skill: 3, fitness: 9, value: 110, selected: true },
+      { id: 4, name: "Sandro Tonella", skill: 3, fitness: 8, value: 120, selected: true },
+      { id: 5, name: "Jan Oblakovic", skill: 4, fitness: 9, value: 160, selected: true },
+      { id: 6, name: "Alex Grimaldi", skill: 3, fitness: 8, value: 110, selected: true },
+      { id: 7, name: "Romelu Luka", skill: 3, fitness: 7, value: 100, selected: true },
+      { id: 8, name: "Victor Osimba", skill: 5, fitness: 9, value: 200, selected: true },
+      { id: 9, name: "Federico Dimark", skill: 3, fitness: 8, value: 110, selected: true },
+      { id: 10, name: "Josko Gvardiolas", skill: 4, fitness: 8, value: 130, selected: true },
+      { id: 11, name: "Sofyan Amrabati", skill: 3, fitness: 7, value: 90, selected: true },
+      { id: 12, name: "Xavi Simonov", skill: 4, fitness: 6, value: 130, selected: false },
+      { id: 13, name: "Arda Gül", skill: 4, fitness: 8, value: 150, selected: false },
+      { id: 14, name: "Hasan Çalhanoğlu", skill: 4, fitness: 9, value: 160, selected: false },
+      { id: 15, name: "Ferdi Kadıgil", skill: 3, fitness: 10, value: 130, selected: false },
+      { id: 16, name: "Barış Yılmazer", skill: 3, fitness: 9, value: 110, selected: false },
+      { id: 17, name: "Kenan Yıldırım", skill: 4, fitness: 8, value: 140, selected: false },
+      { id: 18, name: "Uğurcan Çakmak", skill: 3, fitness: 7, value: 100, selected: false }
+    ];
+
+    // TOPLAM 10 KİŞİLİK TRANSFER HAVUZU
+    const defaultTransferPool = [
+      { id: 101, name: "Gabriel Martinell", skill: 4, fitness: 8, value: 150 },
+      { id: 102, name: "Kvicha Kvarashvili", skill: 4, fitness: 8, value: 160 },
+      { id: 103, name: "Semih Kılıçkaya", skill: 3, fitness: 9, value: 110 },
+      { id: 104, name: "Florian Wirtzner", skill: 5, fitness: 9, value: 210 },
+      { id: 105, name: "Yunus Yazıcı", skill: 3, fitness: 8, value: 100 },
+      { id: 106, name: "Mohammad Saleh", skill: 5, fitness: 8, value: 190 },
+      { id: 107, name: "Kerem Öztürkoğlu", skill: 3, fitness: 9, value: 120 },
+      { id: 108, name: "Enzo Fernand", skill: 4, fitness: 7, value: 140 },
+      { id: 109, name: "Gavi Paz", skill: 4, fitness: 9, value: 155 },
+      { id: 110, name: "Rafael Leo", skill: 5, fitness: 9, value: 220 }
+    ];
+
+    // OYUN DURUMU DEĞİŞKENLERİ
+    let myTeamName, budget, currentWeek, teams, players, currentOpponentIndex, transferPool, currentCandidateIndex;
+
+    // LOCAL STORAGE - YÜKLEME
+    function loadGameData() {
+      const savedData = localStorage.getItem("football_manager_save");
+      if (savedData) {
+        const parsed = JSON.parse(savedData);
+        myTeamName = parsed.myTeamName;
+        budget = parsed.budget;
+        currentWeek = parsed.currentWeek;
+        teams = parsed.teams;
+        players = parsed.players;
+        currentOpponentIndex = parsed.currentOpponentIndex;
+        transferPool = parsed.transferPool || JSON.parse(JSON.stringify(defaultTransferPool));
+        currentCandidateIndex = parsed.currentCandidateIndex || 0;
+      } else {
+        initDefaultState();
+      }
+    }
+
+    function initDefaultState() {
+      myTeamName = defaultMyTeamName;
+      budget = defaultBudget;
+      currentWeek = defaultCurrentWeek;
+      teams = JSON.parse(JSON.stringify(defaultTeams));
+      players = JSON.parse(JSON.stringify(defaultPlayers));
+      currentOpponentIndex = 1;
+      transferPool = JSON.parse(JSON.stringify(defaultTransferPool));
+      currentCandidateIndex = 0;
+    }
+
+    // LOCAL STORAGE - KAYDETME
+    function saveGameData() {
+      const gameState = {
+        myTeamName,
+        budget,
+        currentWeek,
+        teams,
+        players,
+        currentOpponentIndex,
+        transferPool,
+        currentCandidateIndex
+      };
+      localStorage.setItem("football_manager_save", JSON.stringify(gameState));
+    }
+
+    // --- OYUNU SIFIRLAMA (RESET) ---
+    function resetGame() {
+      if (confirm("Oyunu sıfırlamak ve tüm ilerlemenizi silmek istediğinizden emin misiniz?")) {
+        localStorage.removeItem("football_manager_save");
+        initDefaultState();
+        initGame();
+        
+        document.getElementById("home-score").innerText = "0";
+        document.getElementById("away-score").innerText = "0";
+        document.getElementById("commentary-section").style.display = "none";
+        document.getElementById("play-btn").innerText = "Maçı Oyna";
+        document.getElementById("play-btn").style.display = "inline-block";
+        alert("Oyun başarıyla sıfırlandı!");
+      }
+    }
+
+    // --- TRANSFER EKRANINI VE AKTİF OYUNCUYU YAZDIR ---
+    function renderTransferCandidate() {
+      const infoBox = document.getElementById("transfer-candidate-info");
+      const buyBtn = document.getElementById("buy-btn");
+
+      if (transferPool.length === 0) {
+        infoBox.innerHTML = "Transfer pazarında oyuncu kalmadı.";
+        buyBtn.style.display = "none";
+        return;
+      }
+
+      buyBtn.style.display = "inline";
+      if (currentCandidateIndex >= transferPool.length) {
+        currentCandidateIndex = 0;
+      }
+
+      const player = transferPool[currentCandidateIndex];
+      infoBox.innerHTML = `${player.name}'nu $${player.value} fiyatına al<br>Yetenek: ${player.skill} &nbsp;&nbsp; Form: ${player.fitness}`;
+      buyBtn.innerText = `Satın Al ($${player.value})`;
+    }
+
+    // --- SONRAKİ TRANSFER ADAYINA GEÇ ---
+    function nextTransferCandidate() {
+      if (transferPool.length === 0) return;
+      currentCandidateIndex = (currentCandidateIndex + 1) % transferPool.length;
+      renderTransferCandidate();
+      saveGameData();
+    }
+
+    // --- TRANSFER YAPMA ---
+    function buyCurrentPlayer() {
+      if (transferPool.length === 0) return;
+
+      if (players.length >= 18) {
+        alert("Kadronuz dolu (En fazla 18 oyuncu)! Transfer yapmak için önce oyuncu satmalısınız.");
+        return;
+      }
+
+      const candidate = transferPool[currentCandidateIndex];
+
+      if (budget < candidate.value) {
+        alert("Bütçeniz bu transfer için yetersiz!");
+        return;
+      }
+
+      budget -= candidate.value;
+      document.getElementById("budget-display").innerText = budget;
+
+      const newPlayer = {
+        id: Date.now(),
+        name: candidate.name,
+        skill: candidate.skill,
+        fitness: candidate.fitness,
+        value: candidate.value,
+        selected: false
+      };
+
+      players.push(newPlayer);
+      transferPool.splice(currentCandidateIndex, 1); // Alınan oyuncuyu listeden çıkar
+      
+      alert(`${newPlayer.name} kadronuza katıldı!`);
+
+      if (currentCandidateIndex >= transferPool.length) {
+        currentCandidateIndex = 0;
+      }
+
+      renderPlayers();
+      renderTransferCandidate();
+      saveGameData();
+    }
+
+    // --- BUTON TIKLAMA YÖNETİMİ ---
+    function handlePlayButtonClick() {
+      if (currentWeek > 22) {
+        restartNewSeason();
+      } else {
+        startMatch();
+      }
+    }
+
+    // --- YENİ SEZONA BAŞLAMA ---
+    function restartNewSeason() {
+      if (confirm("Yeni sezona başlamak istediğinize emin misiniz? Lig puanları sıfırlanacak.")) {
+        currentWeek = 1;
+        currentOpponentIndex = 1;
+
+        teams.forEach(t => {
+          t.gf = 0;
+          t.ga = 0;
+          t.pts = 0;
+        });
+
+        document.getElementById("week-display").innerText = currentWeek;
+        document.getElementById("home-score").innerText = "0";
+        document.getElementById("away-score").innerText = "0";
+        document.getElementById("commentary-section").style.display = "none";
+        
+        const playBtn = document.getElementById("play-btn");
+        playBtn.innerText = "Maçı Oyna";
+
+        updateOpponentDisplay();
+        renderLeagueTable();
+        saveGameData();
+      }
+    }
+
+    // --- TAKIM İSMİ DEĞİŞTİRME ---
+    function changeTeamName() {
+      const newName = prompt("Yeni takım isminizi girin:", myTeamName);
+      if (newName && newName.trim() !== "") {
+        myTeamName = newName.trim();
+        
+        const userTeam = teams.find(t => t.isUser);
+        if (userTeam) userTeam.name = myTeamName;
+
+        document.getElementById("my-team-name-score").innerText = myTeamName;
+        renderLeagueTable();
+        saveGameData();
+      }
+    }
+
+    // --- RAKİP BİLGİLERİNİ GÜNCELLE ---
+    function updateOpponentDisplay() {
+      const opp = teams[currentOpponentIndex];
+      document.getElementById("opponent-name-score").innerText = opp.name;
+      document.getElementById("opponent-info-display").innerHTML = 
+        `Sıradaki Maç: ${opp.name}<br>Yetenek: ${opp.skill} &nbsp;&nbsp; Form: %${opp.fitness}`;
+    }
+
+    // --- LİG TABLOSUNU ÇİZ VE SIRALA ---
+    function renderLeagueTable() {
+      const sortedTeams = [...teams].sort((a, b) => {
+        if (b.pts !== a.pts) return b.pts - a.pts;
+        const avgA = a.gf - a.ga;
+        const avgB = b.gf - b.ga;
+        if (avgB !== avgA) return avgB - avgA;
+        return b.gf - a.gf;
+      });
+
+      const container = document.getElementById("league-table-container");
+      container.innerHTML = "";
+
+      sortedTeams.forEach((team, idx) => {
+        const avg = team.gf - team.ga;
+        const avgStr = avg > 0 ? `+${avg}` : `${avg}`;
+        const row = document.createElement("div");
+        row.className = `table-row ${team.isUser ? 'highlighted' : ''}`;
+        
+        row.innerHTML = `
+          <span>${idx + 1} &nbsp; ${team.name}</span> 
+          <span>${team.gf}:${team.ga} &nbsp;&nbsp; ${avgStr.padStart(3, ' ')} &nbsp;&nbsp; ${team.pts}</span>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // --- OYUNCU LİSTESİNİ VE SADECE İLK 11 İSTATİSTİKLERİNİ YAZDIR ---
+    function renderPlayers() {
+      const container = document.getElementById("player-list-container");
+      container.innerHTML = "";
+
+      let selectedPlayers = [];
+
+      players.forEach((player) => {
+        if (player.selected) {
+          selectedPlayers.push(player);
+        }
+
+        const row = document.createElement("div");
+        row.className = "player-row";
+        row.innerHTML = `
+          <div class="player-info" onclick="togglePlayerSelection(${player.id})">
+            <span class="hash-tag">${player.selected ? "#" : ""}</span>
+            <span>${player.name}</span>
+          </div>
+          <span>${player.skill} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${player.fitness} &nbsp;&nbsp;&nbsp; 
+            <a class="sell-btn" onclick="sellPlayer(${player.id}); event.stopPropagation();">$${player.value}</a>
+          </span>
+        `;
+        container.appendChild(row);
+      });
+
+      document.getElementById("player-count").innerText = players.length;
+      document.getElementById("selected-count").innerText = selectedPlayers.length;
+
+      let totalSkill = 0;
+      let avgFitness = "0";
+
+      if (selectedPlayers.length > 0) {
+        totalSkill = selectedPlayers.reduce((acc, p) => acc + p.skill, 0);
+        let totalFitness = selectedPlayers.reduce((acc, p) => acc + p.fitness, 0);
+
+        avgFitness = Math.round((totalFitness / (selectedPlayers.length * 10)) * 100);
+      }
+      
+      const userTeam = teams.find(t => t.isUser);
+      if (userTeam) {
+        userTeam.skill = totalSkill;
+        userTeam.fitness = parseInt(avgFitness);
+      }
+
+      document.getElementById("team-stats-display").innerText = `Yetenek: ${totalSkill} \u00A0\u00A0 Form: %${avgFitness}`;
+    }
+
+    // --- OYUNCU SEÇİMİ ---
+    function togglePlayerSelection(id) {
+      const player = players.find(p => p.id === id);
+      if (player) {
+        player.selected = !player.selected;
+        renderPlayers();
+        saveGameData();
+      }
+    }
+
+    // --- OYUNCU SATIŞI ---
+    function sellPlayer(id) {
+      if (players.length <= 11) {
+        alert("Kadroda en az 11 oyuncu kalmalıdır!");
+        return;
+      }
+
+      const index = players.findIndex(p => p.id === id);
+      if (index !== -1) {
+        const soldPlayer = players[index];
+        budget += soldPlayer.value;
+        players.splice(index, 1);
+        
+        document.getElementById("budget-display").innerText = budget;
+        alert(`${soldPlayer.name} $${soldPlayer.value} fiyatına satıldı.`);
+        renderPlayers();
+        saveGameData();
+      }
+    }
+
+    // --- DİĞER MAÇLARI SİMÜLE ET VE TABLOYU GÜNCELLE ---
+    function simulateOtherMatches(userHomeGoals, userAwayGoals) {
+      const userTeam = teams.find(t => t.isUser);
+      const oppTeam = teams[currentOpponentIndex];
+
+      userTeam.gf += userHomeGoals;
+      userTeam.ga += userAwayGoals;
+      oppTeam.gf += userAwayGoals;
+      oppTeam.ga += userHomeGoals;
+
+      if (userHomeGoals > userAwayGoals) {
+        userTeam.pts += 3;
+      } else if (userHomeGoals < userAwayGoals) {
+        oppTeam.pts += 3;
+      } else {
+        userTeam.pts += 1;
+        oppTeam.pts += 1;
+      }
+
+      const remainingTeams = teams.filter(t => t.id !== userTeam.id && t.id !== oppTeam.id);
+      
+      for (let i = 0; i < remainingTeams.length; i += 2) {
+        if (i + 1 < remainingTeams.length) {
+          const t1 = remainingTeams[i];
+          const t2 = remainingTeams[i + 1];
+
+          const g1 = Math.floor(Math.random() * (t1.skill / 12 + 1));
+          const g2 = Math.floor(Math.random() * (t2.skill / 12 + 1));
+
+          t1.gf += g1;
+          t1.ga += g2;
+          t2.gf += g2;
+          t2.ga += g1;
+
+          if (g1 > g2) {
+            t1.pts += 3;
+          } else if (g2 > g1) {
+            t2.pts += 3;
+          } else {
+            t1.pts += 1;
+            t2.pts += 1;
+          }
+        }
+      }
+
+      teams.forEach(t => {
+        if (!t.isUser) {
+          const fitnessDelta = Math.floor(Math.random() * 9) - 4;
+          t.fitness = Math.max(40, Math.min(99, t.fitness + fitnessDelta));
+
+          if (Math.random() < 0.1) {
+            const skillDelta = Math.random() < 0.5 ? 1 : -1;
+            t.skill = Math.max(15, Math.min(40, t.skill + skillDelta));
+          }
+        }
+      });
+
+      renderLeagueTable();
+    }
+
+    // --- HER MAÇ SONUNDA OYUNCULARI GÜNCELLE ---
+    function updatePlayersPostMatch() {
+      players.forEach(player => {
+        if (player.selected) {
+          const fitnessChange = Math.floor(Math.random() * 3) - 1; 
+          player.fitness = Math.max(1, Math.min(10, player.fitness + fitnessChange));
+
+          if (Math.random() < 0.15) {
+            const skillChange = Math.random() < 0.5 ? 1 : -1;
+            player.skill = Math.max(1, Math.min(5, player.skill + skillChange));
+          }
+        } else {
+          if (player.fitness < 10 && Math.random() < 0.4) {
+            player.fitness += 1;
+          }
+        }
+      });
+      renderPlayers();
+    }
+
+    // --- MAÇ MANTIĞI VE ANLATIMI ---
+    let currentMinute = 0;
+    let matchInterval = null;
+    let homeScore = 0;
+    let awayScore = 0;
+
+    const commentaryEvents = [
+      "orta sahada pas trafiği devam ediyor.",
+      "sağ kanattan hızlı çıktı ama defans zamanında araya girdi.",
+      "uzaktan sert bir şut! Top az farkla üstten avuta gidiyor.",
+      "orta alanda sert bir faul, hakem oyunu durdurdu.",
+      "kaleciyle karşı karşıya pozisyon... Son anda korner!",
+      "tehlikeli bir noktadan serbest vuruş! Top barajdan dönüyor.",
+      "ikili mücadelede top taca çıkıyor.",
+      "sol kanattan yapılan etkili ortayı savunma uzaklaştırdı."
+    ];
+
+    function startMatch() {
+      const selectedPlayers = players.filter(p => p.selected);
+      if (selectedPlayers.length !== 11) {
+        alert(`Maça başlayabilmek için TAM OLARAK 11 oyuncu seçmelisiniz! (Şu an seçilen: ${selectedPlayers.length})`);
+        return;
+      }
+
+      document.getElementById("commentary-section").style.display = "block";
+      const statusBall = document.getElementById("status-ball");
+      statusBall.style.display = "inline-block";
+
+      const playBtn = document.getElementById("play-btn");
+      playBtn.style.display = "none";
+
+      currentMinute = 0;
+      homeScore = 0;
+      awayScore = 0;
+      document.getElementById("home-score").innerText = "0";
+      document.getElementById("away-score").innerText = "0";
+      
+      const commentaryBox = document.getElementById("commentary-box");
+      const minuteDisplay = document.getElementById("match-minute");
+      const activeOpponent = teams[currentOpponentIndex];
+      const userTeam = teams.find(t => t.isUser);
+
+      const userPower = userTeam.skill * (userTeam.fitness / 100);
+      const oppPower = activeOpponent.skill * (activeOpponent.fitness / 100);
+      
+      const baseHomeChance = 0.10 * (userPower / (userPower + oppPower)) * 2;
+      const baseAwayChance = 0.10 * (oppPower / (userPower + oppPower)) * 2;
+
+      commentaryBox.innerHTML = `<p><strong>0' Hakem düdüğünü çaldı, maç başladı!</strong></p>`;
+
+      matchInterval = setInterval(() => {
+        currentMinute += 5;
+        minuteDisplay.innerText = currentMinute;
+
+        let eventText = "";
+        const chance = Math.random();
+
+        if (chance < baseHomeChance) {
+          homeScore++;
+          document.getElementById("home-score").innerText = homeScore;
+          eventText = `<span style='color:#2ecc71;'>GOL! ${myTeamName} harika bir vuruşla öne geçiyor!</span>`;
+        } else if (chance < baseHomeChance + baseAwayChance) {
+          awayScore++;
+          document.getElementById("away-score").innerText = awayScore;
+          eventText = `<span style='color:#ff5555;'>GOL! ${activeOpponent.name} topu ağlara gönderdi!</span>`;
+        } else {
+          eventText = commentaryEvents[Math.floor(Math.random() * commentaryEvents.length)];
+        }
+
+        const p = document.createElement("p");
+        p.innerHTML = `<strong>${currentMinute}'</strong> ${eventText}`;
+        commentaryBox.prepend(p);
+
+        if (currentMinute >= 90) {
+          clearInterval(matchInterval);
+
+          statusBall.style.display = "none";
+
+          const endP = document.createElement("p");
+          endP.innerHTML = `<strong style="color: #2ecc71;">90' Hakem son düdüğü çaldı! Maç Sonucu: ${homeScore} - ${awayScore}</strong>`;
+          commentaryBox.prepend(endP);
+          
+          updatePlayersPostMatch();
+          simulateOtherMatches(homeScore, awayScore);
+
+          if (currentWeek < 22) {
+            currentWeek++;
+            document.getElementById("week-display").innerText = currentWeek;
+            
+            currentOpponentIndex = (currentOpponentIndex % (teams.length - 1)) + 1;
+            updateOpponentDisplay();
+
+            playBtn.innerText = "Sıradaki Maçı Oyna";
+          } else {
+            currentWeek = 23;
+            playBtn.innerText = "Sezon Bitti (Yeniden Başla)";
+          }
+          
+          playBtn.style.display = "inline-block";
+          saveGameData();
+        }
+      }, 1000);
+    }
+
+    // İLK YÜKLEME VE ARAYÜZ BAŞLATMA
+    function initGame() {
+      loadGameData();
+
+      document.getElementById("my-team-name-score").innerText = myTeamName;
+      document.getElementById("budget-display").innerText = budget;
+      document.getElementById("week-display").innerText = currentWeek > 22 ? 22 : currentWeek;
+
+      const playBtn = document.getElementById("play-btn");
+      if (currentWeek > 22) {
+        playBtn.innerText = "Sezon Bitti (Yeniden Başla)";
+      }
+
+      renderPlayers();
+      renderTransferCandidate();
+      renderLeagueTable();
+      updateOpponentDisplay();
+    }
+
+    initGame();
+  </script>
+</body>
+</html>
