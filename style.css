@@ -65,13 +65,13 @@ header.astro-header {
   align-items: center;
   gap: 12px;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 16px;
   letter-spacing: -0.02em;
 }
 
 .brand-icon {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   background: #18181b;
   color: #ffffff;
   border-radius: 10px;
@@ -79,7 +79,7 @@ header.astro-header {
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 14px;
 }
 
 .header-actions {
@@ -87,7 +87,7 @@ header.astro-header {
   align-items: center;
   gap: 16px;
   color: var(--text-muted);
-  font-size: 1.05rem;
+  font-size: 14px;
 }
 
 /* --- Hero Card (Varsayılan - Mobil Uyumlu) --- */
