@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mete Dinçer</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- Header -->
+    <header class="astro-header">
+      <a href="index.html" class="header-brand">
+        <div class="brand-icon">M</div>
+        <span>MD</span>
+      </a>
+      <div class="header-actions">
+        <a href="#notes"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a href="#projects"><i class="fa-solid fa-bars"></i></a>
+      </div>
+    </header>
+
+    <!-- Profile -->
+    <section class="hero-card">
+      <div class="hero-avatar">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 19h20L12 2zm0 4l6 11H6l6-11z"/></svg>
+      </div>
+      <h1 class="hero-title">Mete Dinçer</h1>
+      <div class="hero-subtitle">Web & Frontend Dev</div>
+      <p class="hero-bio">A simple website with my notes and projects.</p>
+      <div class="hero-buttons">
+        <a href="https://github.com/medincer" target="_blank" class="astro-btn"><i class="fa-brands fa-github"></i> Github</a>
+        <a href="mailto:medincer@proton.me" class="astro-btn"><i class="fa-regular fa-envelope"></i> Email</a>
+      </div>
+    </section>
+
+    <!-- Microblog -->
+    <section id="notes" class="section-wrapper">
+      <div class="section-head">
+        <h3>Notes</h3>
+        <span class="section-badge">Microblog</span>
+      </div>
+
+      <article class="note-card">
+        <div class="note-header">
+          <span class="note-date"><i class="fa-regular fa-calendar"></i> July 23, 2026</span>
+          <span class="badge">#hey</span>
+        </div>
+        <div class="note-body">
+          <p>Hello world! 🎉</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="section-wrapper">
+      <div class="section-head">
+        <h3>Projects</h3>
+      </div>
+
+      <!-- Project 1 -->
+      <a href="https://medincer.github.io/fm" target="_blank" class="project-card">
+        <div class="project-content">
+          <div class="project-top">
+            <i class="fa-solid fa-layer-group project-icon"></i>
+            <i class="fa-regular fa-star star-icon"></i>
+          </div>
+          <h4 class="project-title">Futbol Menajeri</h4>
+          <p class="project-desc">Text-based football manager game.</p>
+          <div class="project-tags">
+            <span class="badge">JavaScript</span>
+            <span class="badge">CSS3</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Project 2 -->
+      <a href="https://memecommunity.netlify.app" target="_blank" class="project-card">
+        <div class="project-content">
+          <div class="project-top">
+            <i class="fa-solid fa-code project-icon"></i>
+            <i class="fa-regular fa-star star-icon"></i>
+          </div>
+          <h4 class="project-title">Meme Community</h4>
+          <p class="project-desc">Your funny meme templates.</p>
+          <div class="project-tags">
+            <span class="badge">HTML5</span>
+            <span class="badge">Netlify</span>
+          </div>
+        </div>
+      </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="astro-footer">
+      <div class="footer-line">
+        <span>© 2026 Mete Dinçer</span>
+        <a href="https://github.com/medincer" target="_blank"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>
