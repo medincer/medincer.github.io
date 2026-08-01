@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futbol Menajeri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #0a0c10;
+      --bg-card: #12161f;
+      --bg-card-hover: #1a202c;
+      --border-color: #262d3d;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-green: #10b981;
+      --accent-green-glow: rgba(16, 185, 129, 0.2);
+      --accent-red: #ef4444;
+      --accent-yellow: #f59e0b;
+      --radius: 12px;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .game-container {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    @media (min-width: 900px) {
+      .game-container {
+        max-width: 1040px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+    }
+
+    .card-box {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sub-text {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .score-banner {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      margin: 12px 0;
+      font-family: var(--font-mono);
+    }
+
+    .score-line {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .score-num {
+      color: var(--accent-green);
+      background: var(--accent-green-glow);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .editable-team {
+      color: var(--text-main);
+      border-bottom: 1px dashed var(--accent-green);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .editable-team:hover {
+      color: var(--accent-green);
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-green);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background-color: #059669;
+      box-shadow: 0 0 12px var(--accent-green-glow);
+    }
+
+    .btn-outline-danger {
+      background: transparent;
+      border-color: rgba(239, 68, 68, 0.3);
+      color: var(--accent-red);
+    }
+
+    .btn-outline-danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--accent-red);
+    }
+
+    .timer-line {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent-green);
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-ball {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-green);
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.3; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    #commentary-box {
+      height: 120px;
+      overflow-y: auto;
+      background: #000;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    #commentary-box p {
+      margin-bottom: 4px;
+      border-bottom: 1px dashed #1e293b;
+      padding-bottom: 2px;
+    }
+
+    .table-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .section-title, .player-row, .league-header, .table-row {
+      display: grid;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 6px;
+    }
+
+    .section-title, .league-header {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+      margin-bottom: 6px;
+    }
+
+    .player-row, .table-row {
+      background-color: rgba(255, 255, 255, 0.015);
+      border: 1px solid transparent;
+      transition: background 0.15s;
+    }
+
+    .player-row:hover, .table-row:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--border-color);
+    }
+
+    .player-row {
+      grid-template-columns: 1fr 40px 40px 60px;
+      gap: 8px;
+    }
+
+    .league-header, .table-row {
+      grid-template-columns: 1fr 35px 35px 45px 35px;
+      gap: 6px;
+      text-align: right;
+    }
+
+    .league-header span:first-child, .table-row span:first-child {
+      text-align: left;
+    }
+
+    .player-info {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .hash-tag {
+      color: var(--accent-green);
+      font-weight: 700;
+      width: 12px;
+    }
+
+    .sell-btn {
+      color: var(--accent-green);
+      cursor: pointer;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .sell-btn:hover {
+      text-decoration: underline;
+    }
+
+    .team-stats {
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .highlighted {
+      color: var(--accent-green);
+      font-weight: 700;
+    }
+
+    .highlighted-row {
+      background: var(--accent-green-glow) !important;
+      border-color: rgba(16, 185, 129, 0.3) !important;
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    .starter-count {
+      font-size: 11px;
+      color: var(--accent-green);
+      background: var(--accent-green-glow);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+    }
+
+    .transfer-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .action-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .action-links a {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .difficulty-modal {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(5, 7, 10, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 28px;
+      border-radius: 16px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .difficulty-btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 8px;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .difficulty-btn:hover {
+      border-color: var(--accent-green);
+      background: var(--bg-card-hover);
+    }
+
+    .difficulty-btn.hard:hover {
+      border-color: var(--accent-red);
+    }
+
+    .mode-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .badge-easy { background-color: var(--accent-green-glow); color: var(--accent-green); border: 1px solid var(--accent-green); }
+    .badge-hard { background-color: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+  </style>
+</head>
+<body>
+
+  <div id="difficulty-modal" class="difficulty-modal" style="display: none;">
+    <div class="modal-content">
+      <h2 style="font-size: 18px; margin-bottom: 6px;">Oyun Zorluğu Seçin</h2>
+      <p class="sub-text" style="margin-bottom: 16px;">
+        Kariyerinize başlamadan önce ligdeki form ve ekonomik şartların zorluğunu belirleyin.
+      </p>
+      
+      <button class="difficulty-btn" onclick="selectDifficulty('easy')">
+        <span style="color: var(--accent-green);">● Kolay Mod</span>
+        <div style="font-size: 11px; color: var(--text-muted); font-weight: normal; margin-top: 4px;">
+          Form düşüşü sınırlı (Min: 5), Başlangıç Bütçesi: $200
+        </div>
+      </button>
+      
+      <button class="difficulty-btn hard" onclick="selectDifficulty('hard')">
+        <span style="color: var(--accent-red);">● Zor Mod</span>
+        <div style="font-size: 11px; color: var(--text-muted); font-weight: normal; margin-top: 4px;">
+          Form 1'e kadar çakılabilir, Başlangıç Bütçesi: $50
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <div class="game-container">
+
+    <div class="left-column">
+      <div class="card-box">
+        <div id="match-view">
+          <div class="card-header">
+            <div class="card-title">
+              Hafta <span id="week-display">1</span>/22
+              <span id="star-display" style="color: var(--accent-yellow);"></span>
+            </div>
+            <span id="difficulty-badge" class="mode-badge"></span>
+          </div>
+
+          <div class="score-banner">
+            <div class="score-line">
+              <span id="my-team-name-score" class="editable-team" onclick="changeTeamName()" title="İsmi değiştirmek için tıkla">Anadolu Kaplanları</span> 
+              <span class="score-num"><span id="home-score">0</span> - <span id="away-score">0</span></span> 
+              <span id="opponent-name-score">Kadıköy SK</span>
+            </div>
+          </div>
+
+          <p class="sub-text" id="opponent-info-display">
+            Sıradaki Maç: Kadıköy SK<br>Yetenek: -- &nbsp;|&nbsp; Form: %--
+          </p>
+          
+          <div class="action-btn-group">
+            <button id="play-btn" class="btn btn-primary" onclick="handlePlayButtonClick()">Maça Başla</button>
+            <button id="reset-btn" class="btn btn-outline-danger" onclick="resetGame()">Sıfırla</button>
+          </div>
+        </div>
+
+        <div id="commentary-section" style="display: none; margin-top: 16px;">
+          <div class="timer-line">
+            <span id="status-ball" class="live-ball"></span>
+            Dakika: <span id="match-minute">0</span>'
+          </div>
+          <div id="commentary-box"></div>
+        </div>
+      </div>
+
+      <div class="card-box" style="margin-top: 20px;">
+        <div class="section-title">
+          <span>Kadro (<span id="player-count">18</span>/18) <span class="starter-count">#<span id="selected-count">11</span>/11</span></span>
+          <span style="text-align: center;">YTN</span>
+          <span style="text-align: center;">FRM</span>
+          <span style="text-align: right;">FİYAT</span>
+        </div>
+        
+        <div class="table-list" id="player-list-container"></div>
+
+        <div class="team-stats" id="team-stats-display">
+          <div>Ytnk: -- &nbsp;|&nbsp; Form: %--</div>
+          <div class="highlighted">Güç: -- / 100</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-column">
+      <div class="card-box transfer-card">
+        <div class="card-header">
+          <div class="card-title">Pazar</div>
+          <div class="card-title" style="color: var(--accent-green);">Bütçe: $<span id="budget-display">400</span></div>
+        </div>
+        
+        <p class="sub-text" id="transfer-candidate-info"></p>
+        
+        <div class="sub-text" style="color: var(--accent-yellow); font-family: var(--font-mono); font-size: 11px;">
+          Kalan Transfer Hakkı: <span id="transfer-limit-display">3</span>/3
+        </div>
+
+        <div class="action-links">
+          <a href="#" id="buy-btn" class="btn btn-primary" style="padding: 6px 12px;" onclick="buyCurrentPlayer(); return false;">Satın Al</a>
+          <a href="#" class="btn btn-outline-danger" style="padding: 6px 12px; color: var(--text-muted); border-color: var(--border-color);" onclick="nextTransferCandidate(); return false;">Pas Geç &raquo;</a>
+        </div>
+      </div>
+
+      <div class="card-box" style="margin-top: 20px;">
+        <div class="league-header">
+          <span># Takım</span>
+          <span>AG</span>
+          <span>YG</span>
+          <span>AV</span>
+          <span>P</span>
+        </div>
+        <div class="table-list" id="league-table-container"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const defaultMyTeamName = "ISTNBL";
+    const defaultCurrentWeek = 1;
+    const MAX_TRANSFERS_PER_SEASON = 3;
+
+    const defaultTeams = [
+      { id: 0, name: "ISTNBL", skill: 46, fitness: 72, isUser: true, gf: 0, ga: 0, pts: 0 },
+      { id: 1, name: "SMSNSP", skill: 38, fitness: 64, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 2, name: "KNYSP", skill: 34, fitness: 60, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 3, name: "FNRBH", skill: 44, fitness: 70, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 4, name: "KCLSP", skill: 34, fitness: 62, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 5, name: "GZNTPF", skill: 28, fitness: 56, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 6, name: "ALNYSP", skill: 30, fitness: 58, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 7, name: "TRBZNSP", skill: 40, fitness: 66, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 8, name: "GNCLRB", skill: 32, fitness: 60, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 9, name: "BSKT", skill: 42, fitness: 68, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 10, name: "RZSP", skill: 32, fitness: 64, isUser: false, gf: 0, ga: 0, pts: 0 },
+      { id: 11, name: "GLTSR", skill: 44, fitness: 70, isUser: false, gf: 0, ga: 0, pts: 0 }
+    ];
+
+    const defaultPlayers = [
+      { id: 1, name: "Lamin Yamala", skill: 4, fitness: 7, value: 130, selected: true },
+      { id: 2, name: "Matea Kovasik", skill: 4, fitness: 7, value: 140, selected: true },
+      { id: 3, name: "Ibrahim Konte", skill: 3, fitness: 8, value: 110, selected: true },
+      { id: 4, name: "Pedro", skill: 3, fitness: 7, value: 110, selected: true },
+      { id: 5, name: "Manuer Noer", skill: 4, fitness: 8, value: 150, selected: true },
+      { id: 6, name: "Leonel Mazzi", skill: 5, fitness: 8, value: 180, selected: true },
+      { id: 7, name: "Kristian Ronald", skill: 5, fitness: 9, value: 200, selected: true },
+      { id: 8, name: "Viktor Osimba", skill: 4, fitness: 8, value: 160, selected: true },
+      { id: 9, name: "Federiko Dimark", skill: 3, fitness: 7, value: 110, selected: true },
+      { id: 10, name: "Virgen van Diik", skill: 4, fitness: 7, value: 130, selected: true },
+      { id: 11, name: "Mikel Olis", skill: 4, fitness: 7, value: 130, selected: true },
+      { id: 12, name: "Dominiko Soboslai", skill: 4, fitness: 8, value: 150, selected: false },
+      { id: 13, name: "Arden Güleryüz", skill: 4, fitness: 7, value: 140, selected: false },
+      { id: 14, name: "Hasan Çalhan", skill: 4, fitness: 6, value: 120, selected: false },
+      { id: 15, name: "Ferit Kadıgil", skill: 4, fitness: 6, value: 110, selected: false },
+      { id: 16, name: "Baran Yılmazer", skill: 3, fitness: 7, value: 100, selected: false },
+      { id: 17, name: "Kemal Yıldırım", skill: 3, fitness: 7, value: 100, selected: false },
+      { id: 18, name: "Uğur Çakmak", skill: 3, fitness: 6, value: 90, selected: false }
+    ];
+
+    const defaultTransferPool = [
+      { id: 101, name: "Tbaut Qourtois", skill: 4, fitness: 7, value: 140 },
+      { id: 102, name: "Kviça Kvarashvili", skill: 4, fitness: 7, value: 140 },
+      { id: 103, name: "Kylan Mbembe", skill: 5, fitness: 9, value: 240 },
+      { id: 104, name: "Flori Wirtzner", skill: 5, fitness: 8, value: 180 },
+      { id: 105, name: "Cihan Kısa", skill: 4, fitness: 7, value: 130 },
+      { id: 106, name: "Mahmoud Saleh", skill: 5, fitness: 8, value: 200 },
+      { id: 107, name: "Ousman Dembaba", skill: 4, fitness: 9, value: 160 },
+      { id: 108, name: "Erlin Haland", skill: 5, fitness: 9, value: 220 },
+      { id: 109, name: "Jud Bellinghall", skill: 5, fitness: 8, value: 200 },
+      { id: 110, name: "Markus Resford", skill: 4, fitness: 8, value: 160 },
+      { id: 111, name: "Federik Valvarde", skill: 5, fitness: 6, value: 140 },
+      { id: 112, name: "Rafaell Leo", skill: 4, fitness: 8, value: 150 }
+    ];
+
+    let myTeamName, budget, currentWeek, teams, players, currentOpponentIndex, transferPool, currentCandidateIndex, championships, transfersMadeThisSeason, difficulty;
+
+    function selectDifficulty(mode) {
+      difficulty = mode;
+      document.getElementById("difficulty-modal").style.display = "none";
+      initDefaultState();
+      initGameUI();
+      saveGameData();
+    }
+
+    function renderStars() {
+      const starDisplay = document.getElementById("star-display");
+      starDisplay.innerText = championships > 0 ? "★".repeat(championships) : "";
+      
+      const badge = document.getElementById("difficulty-badge");
+      if (difficulty === "easy") {
+        badge.innerText = "KOLAY";
+        badge.className = "mode-badge badge-easy";
+      } else {
+        badge.innerText = "ZOR";
+        badge.className = "mode-badge badge-hard";
+      }
+    }
+
+    function loadGameData() {
+      const savedData = localStorage.getItem("football_manager_save");
+      if (savedData) {
+        const parsed = JSON.parse(savedData);
+        myTeamName = parsed.myTeamName;
+        budget = parsed.budget;
+        currentWeek = parsed.currentWeek;
+        teams = parsed.teams;
+        players = parsed.players;
+        currentOpponentIndex = parsed.currentOpponentIndex;
+        transferPool = parsed.transferPool || JSON.parse(JSON.stringify(defaultTransferPool));
+        currentCandidateIndex = parsed.currentCandidateIndex || 0;
+        championships = parsed.championships || 0;
+        transfersMadeThisSeason = parsed.transfersMadeThisSeason || 0;
+        difficulty = parsed.difficulty || "easy";
+        return true;
+      }
+      return false;
+    }
+
+    function initDefaultState() {
+      myTeamName = defaultMyTeamName;
+      difficulty = difficulty || "easy";
+      budget = difficulty === "easy" ? 200 : 50;
+      currentWeek = defaultCurrentWeek;
+      teams = JSON.parse(JSON.stringify(defaultTeams));
+      players = JSON.parse(JSON.stringify(defaultPlayers));
+      currentOpponentIndex = 1;
+      transferPool = JSON.parse(JSON.stringify(defaultTransferPool));
+      currentCandidateIndex = 0;
+      championships = 0;
+      transfersMadeThisSeason = 0;
+    }
+
+    function saveGameData() {
+      const gameState = {
+        myTeamName, budget, currentWeek, teams, players,
+        currentOpponentIndex, transferPool, currentCandidateIndex, championships, transfersMadeThisSeason, difficulty
+      };
+      localStorage.setItem("football_manager_save", JSON.stringify(gameState));
+    }
+
+    function resetGame() {
+      if (confirm("Oyunu sıfırlamak ve zorluk seçim ekranına dönmek istediğinizden emin misiniz?")) {
+        localStorage.removeItem("football_manager_save");
+        document.getElementById("difficulty-modal").style.display = "flex";
+      }
+    }
+
+    function renderTransferCandidate() {
+      const infoBox = document.getElementById("transfer-candidate-info");
+      const buyBtn = document.getElementById("buy-btn");
+      const limitDisplay = document.getElementById("transfer-limit-display");
+
+      const remainingTransfers = MAX_TRANSFERS_PER_SEASON - transfersMadeThisSeason;
+      limitDisplay.innerText = remainingTransfers;
+
+      if (transferPool.length === 0) {
+        infoBox.innerHTML = "Transfer pazarında oyuncu kalmadı.";
+        buyBtn.style.display = "none";
+        return;
+      }
+
+      buyBtn.style.display = "inline-flex";
+      if (currentCandidateIndex >= transferPool.length) {
+        currentCandidateIndex = 0;
+      }
+
+      const player = transferPool[currentCandidateIndex];
+      infoBox.innerHTML = `<strong style="color:var(--text-main);">${player.name}</strong> — $<span style="color:var(--accent-green);">${player.value}</span><br>Yetenek: ${player.skill} &nbsp;|&nbsp; Form: ${player.fitness}`;
+      buyBtn.innerText = `Satın Al ($${player.value})`;
+    }
+
+    function nextTransferCandidate() {
+      if (transferPool.length === 0) return;
+      currentCandidateIndex = (currentCandidateIndex + 1) % transferPool.length;
+      renderTransferCandidate();
+      saveGameData();
+    }
+
+    function buyCurrentPlayer() {
+      if (transferPool.length === 0) return;
+
+      if (transfersMadeThisSeason >= MAX_TRANSFERS_PER_SEASON) {
+        alert("Bu sezonluk transfer hakkınızı doldurdunuz (En fazla 3 transfer)! Yeni sezonda tekrar hakkınız açılacaktır.");
+        return;
+      }
+
+      if (players.length >= 18) {
+        alert("Kadronuz dolu (En fazla 18 oyuncu)! Transfer yapmak için önce oyuncu satmalısınız.");
+        return;
+      }
+
+      const candidate = transferPool[currentCandidateIndex];
+
+      if (budget < candidate.value) {
+        alert("Bütçeniz bu transfer için yetersiz!");
+        return;
+      }
+
+      budget -= candidate.value;
+      transfersMadeThisSeason++;
+      document.getElementById("budget-display").innerText = budget;
+
+      const newPlayer = {
+        id: Date.now(),
+        name: candidate.name,
+        skill: candidate.skill,
+        fitness: candidate.fitness,
+        value: candidate.value,
+        selected: false
+      };
+
+      players.push(newPlayer);
+      transferPool.splice(currentCandidateIndex, 1);
+      
+      alert(`${newPlayer.name} kadronuza katıldı! (Kalan transfer hakkınız: ${MAX_TRANSFERS_PER_SEASON - transfersMadeThisSeason})`);
+
+      if (currentCandidateIndex >= transferPool.length) {
+        currentCandidateIndex = 0;
+      }
+
+      renderPlayers();
+      renderTransferCandidate();
+      saveGameData();
+    }
+
+    function handlePlayButtonClick() {
+      if (currentWeek > 22) {
+        restartNewSeason();
+      } else {
+        startMatch();
+      }
+    }
+
+    function restartNewSeason() {
+      if (confirm("Yeni sezona başlamak istediğinize emin misiniz? Transfer haklarınız yenilenecek ve lig puanları sıfırlanacak.")) {
+        currentWeek = 1;
+        currentOpponentIndex = 1;
+        transfersMadeThisSeason = 0;
+
+        players.forEach(p => {
+          if (Math.random() < 0.3) {
+            const skillChange = Math.floor(Math.random() * 3) - 1;
+            p.skill = Math.max(1, Math.min(5, p.skill + skillChange));
+          }
+          p.fitness = Math.floor(Math.random() * 3) + 7;
+        });
+
+        teams.forEach(t => {
+          t.gf = 0;
+          t.ga = 0;
+          t.pts = 0;
+          if(!t.isUser) {
+            t.skill = Math.max(28, Math.min(52, t.skill + (Math.floor(Math.random() * 3) - 1)));
+            t.fitness = Math.floor(Math.random() * 15) + 65;
+          }
+        });
+
+        document.getElementById("week-display").innerText = currentWeek;
+        document.getElementById("home-score").innerText = "0";
+        document.getElementById("away-score").innerText = "0";
+        document.getElementById("commentary-section").style.display = "none";
+        
+        const playBtn = document.getElementById("play-btn");
+        playBtn.innerText = "Maça Başla";
+
+        renderPlayers();
+        renderTransferCandidate();
+        updateOpponentDisplay();
+        renderLeagueTable();
+        saveGameData();
+      }
+    }
+
+    function changeTeamName() {
+      const newName = prompt("Yeni takım isminizi girin:", myTeamName);
+      if (newName && newName.trim() !== "") {
+        myTeamName = newName.trim();
+        
+        const userTeam = teams.find(t => t.isUser);
+        if (userTeam) userTeam.name = myTeamName;
+
+        document.getElementById("my-team-name-score").innerText = myTeamName;
+        renderLeagueTable();
+        saveGameData();
+      }
+    }
+
+    function updateOpponentDisplay() {
+      const opp = teams[currentOpponentIndex];
+      document.getElementById("opponent-name-score").innerText = opp.name;
+      document.getElementById("opponent-info-display").innerHTML = 
+        `Sıradaki Maç: <strong>${opp.name}</strong><br>Yetenek: ${opp.skill} &nbsp;|&nbsp; Form: %${opp.fitness}`;
+    }
+
+    function renderLeagueTable() {
+      const sortedTeams = [...teams].sort((a, b) => {
+        if (b.pts !== a.pts) return b.pts - a.pts;
+        const avgA = a.gf - a.ga;
+        const avgB = b.gf - b.ga;
+        if (avgB !== avgA) return avgB - avgA;
+        return b.gf - a.gf;
+      });
+
+      const container = document.getElementById("league-table-container");
+      container.innerHTML = "";
+
+      sortedTeams.forEach((team, idx) => {
+        const avg = team.gf - team.ga;
+        const row = document.createElement("div");
+        row.className = `table-row ${team.isUser ? 'highlighted-row' : ''}`;
+        
+        row.innerHTML = `
+          <span>${idx + 1}. ${team.name}</span> 
+          <span>${team.gf}</span>
+          <span>${team.ga}</span>
+          <span>${avg > 0 ? '+' + avg : avg}</span>
+          <span>${team.pts}</span>
+        `;
+        container.appendChild(row);
+      });
+
+      return sortedTeams;
+    }
+
+    function renderPlayers() {
+      const container = document.getElementById("player-list-container");
+      container.innerHTML = "";
+
+      let selectedPlayers = [];
+
+      players.forEach((player) => {
+        if (player.selected) {
+          selectedPlayers.push(player);
+        }
+
+        const row = document.createElement("div");
+        row.className = "player-row";
+        row.innerHTML = `
+          <div class="player-info" onclick="togglePlayerSelection(${player.id})">
+            <span class="hash-tag">${player.selected ? "✓" : ""}</span>
+            <span>${player.name}</span>
+          </div>
+          <span style="text-align: center;">${player.skill}</span>
+          <span style="text-align: center;">${player.fitness}</span>
+          <a class="sell-btn" onclick="sellPlayer(${player.id}); event.stopPropagation();">$${player.value}</a>
+        `;
+        container.appendChild(row);
+      });
+
+      document.getElementById("player-count").innerText = players.length;
+      document.getElementById("selected-count").innerText = selectedPlayers.length;
+
+      let totalSkill = 0;
+      let avgFitness = "0";
+      let overallRating = 0;
+
+      if (selectedPlayers.length > 0) {
+        totalSkill = selectedPlayers.reduce((acc, p) => acc + p.skill, 0);
+        let totalFitness = selectedPlayers.reduce((acc, p) => acc + p.fitness, 0);
+
+        avgFitness = Math.round((totalFitness / (selectedPlayers.length * 10)) * 100);
+        
+        const skillRating = (totalSkill / 55) * 50;
+        const fitnessRating = (avgFitness / 100) * 50;
+        overallRating = Math.min(100, Math.round(skillRating + fitnessRating));
+      }
+      
+      const userTeam = teams.find(t => t.isUser);
+      if (userTeam) {
+        userTeam.skill = totalSkill;
+        userTeam.fitness = parseInt(avgFitness);
+      }
+
+      document.getElementById("team-stats-display").innerHTML = 
+        `<div>Ytnk: ${totalSkill} &nbsp;|&nbsp; Form: %${avgFitness}</div>` +
+        `<div class="highlighted">Güç: %${overallRating}</div>`;
+    }
+
+    function togglePlayerSelection(id) {
+      const player = players.find(p => p.id === id);
+      if (player) {
+        player.selected = !player.selected;
+        renderPlayers();
+        saveGameData();
+      }
+    }
+
+    function sellPlayer(id) {
+      if (players.length <= 11) {
+        alert("Kadroda en az 11 oyuncu kalmalıdır!");
+        return;
+      }
+
+      const index = players.findIndex(p => p.id === id);
+      if (index !== -1) {
+        const soldPlayer = players[index];
+        budget += soldPlayer.value;
+        players.splice(index, 1);
+        
+        document.getElementById("budget-display").innerText = budget;
+        alert(`${soldPlayer.name} $${soldPlayer.value} fiyatına satıldı.`);
+        renderPlayers();
+        saveGameData();
+      }
+    }
+
+    function simulateOtherMatches(userHomeGoals, userAwayGoals) {
+      const userTeam = teams.find(t => t.isUser);
+      const oppTeam = teams[currentOpponentIndex];
+
+      userTeam.gf += userHomeGoals;
+      userTeam.ga += userAwayGoals;
+      oppTeam.gf += userAwayGoals;
+      oppTeam.ga += userHomeGoals;
+
+      if (userHomeGoals > userAwayGoals) {
+        userTeam.pts += 3;
+      } else if (userHomeGoals < userAwayGoals) {
+        oppTeam.pts += 3;
+      } else {
+        userTeam.pts += 1;
+        oppTeam.pts += 1;
+      }
+
+      const remainingTeams = teams.filter(t => t.id !== userTeam.id && t.id !== oppTeam.id);
+      
+      for (let i = 0; i < remainingTeams.length; i += 2) {
+        if (i + 1 < remainingTeams.length) {
+          const t1 = remainingTeams[i];
+          const t2 = remainingTeams[i + 1];
+
+          const p1 = t1.skill * (t1.fitness / 100);
+          const p2 = t2.skill * (t2.fitness / 100);
+
+          const g1 = Math.floor(Math.random() * (p1 / 10 + 1));
+          const g2 = Math.floor(Math.random() * (p2 / 10 + 1));
+
+          t1.gf += g1;
+          t1.ga += g2;
+          t2.gf += g2;
+          t2.ga += g1;
+
+          if (g1 > g2) {
+            t1.pts += 3;
+          } else if (g2 > g1) {
+            t2.pts += 3;
+          } else {
+            t1.pts += 1;
+            t2.pts += 1;
+          }
+        }
+      }
+
+      teams.forEach(t => {
+        if (!t.isUser) {
+          const fitnessDelta = Math.floor(Math.random() * 7) - 3;
+          t.fitness = Math.max(55, Math.min(95, t.fitness + fitnessDelta));
+        }
+      });
+
+      return renderLeagueTable();
+    }
+
+    function updatePlayersPostMatch() {
+      const minFitness = difficulty === "easy" ? 5 : 1;
+      const recoveryChance = difficulty === "easy" ? 0.8 : 0.5;
+
+      players.forEach(player => {
+        if (player.selected) {
+          if (difficulty === "easy") {
+            if (Math.random() < 0.5) {
+              player.fitness = Math.max(minFitness, player.fitness - 1);
+            }
+          } else {
+            if (Math.random() < 0.7) {
+              const drop = Math.floor(Math.random() * 2) + 1;
+              player.fitness = Math.max(minFitness, player.fitness - drop);
+            }
+          }
+        } else {
+          if (player.fitness < 10 && Math.random() < recoveryChance) {
+            player.fitness = Math.min(10, player.fitness + 1);
+          }
+        }
+      });
+      renderPlayers();
+    }
+
+    let currentMinute = 0;
+    let matchInterval = null;
+    let homeScore = 0;
+    let awayScore = 0;
+
+    const commentaryEvents = [
+      "orta sahada pas trafiği devam ediyor.",
+      "sağ kanattan hızlı çıktı ama defans zamanında araya girdi.",
+      "uzaktan sert bir şut! Top az farkla üstten avuta gidiyor.",
+      "orta alanda sert bir faul, hakem oyunu durdurdu.",
+      "kaleciyle karşı karşıya pozisyon... Son anda korner!",
+      "tehlikeli bir noktadan serbest vuruş! Top barajdan dönüyor.",
+      "ikili mücadelede top taca çıkıyor.",
+      "sol kanattan yapılan etkili ortayı savunma uzaklaştırdı."
+    ];
+
+    function startMatch() {
+      const selectedPlayers = players.filter(p => p.selected);
+      if (selectedPlayers.length !== 11) {
+        alert(`Maça başlayabilmek için TAM OLARAK 11 oyuncu seçmelisiniz! (Şu an seçilen: ${selectedPlayers.length})`);
+        return;
+      }
+
+      document.getElementById("commentary-section").style.display = "block";
+      const statusBall = document.getElementById("status-ball");
+      statusBall.style.display = "inline-block";
+
+      const playBtn = document.getElementById("play-btn");
+      playBtn.style.display = "none";
+
+      currentMinute = 0;
+      homeScore = 0;
+      awayScore = 0;
+      document.getElementById("home-score").innerText = "0";
+      document.getElementById("away-score").innerText = "0";
+      
+      const commentaryBox = document.getElementById("commentary-box");
+      const minuteDisplay = document.getElementById("match-minute");
+      const activeOpponent = teams[currentOpponentIndex];
+      const userTeam = teams.find(t => t.isUser);
+
+      const userEffPower = userTeam.skill * (userTeam.fitness / 100);
+      const oppEffPower = activeOpponent.skill * (activeOpponent.fitness / 100);
+      const totalPower = userEffPower + oppEffPower;
+      
+      const baseHomeChance = 0.16 * (userEffPower / totalPower);
+      const baseAwayChance = 0.16 * (oppEffPower / totalPower);
+
+      commentaryBox.innerHTML = `<p style="color:var(--text-muted);">0' Hakem düdüğünü çaldı, maç başladı!</p>`;
+
+      matchInterval = setInterval(() => {
+        currentMinute += 5;
+        minuteDisplay.innerText = currentMinute;
+
+        let eventText = "";
+        const chance = Math.random();
+
+        if (chance < baseHomeChance) {
+          homeScore++;
+          document.getElementById("home-score").innerText = homeScore;
+          eventText = `<span style='color:var(--accent-green); font-weight:bold;'>GOL! ${myTeamName} harika bir vuruşla topu ağlara gönderiyor!</span>`;
+        } else if (chance < baseHomeChance + baseAwayChance) {
+          awayScore++;
+          document.getElementById("away-score").innerText = awayScore;
+          eventText = `<span style='color:var(--accent-red); font-weight:bold;'>GOL! ${activeOpponent.name} topu ağlara gönderdi!</span>`;
+        } else {
+          eventText = commentaryEvents[Math.floor(Math.random() * commentaryEvents.length)];
+        }
+
+        const p = document.createElement("p");
+        p.innerHTML = `<strong style="color:var(--text-muted);">${currentMinute}'</strong> ${eventText}`;
+        commentaryBox.prepend(p);
+
+        if (currentMinute >= 90) {
+          clearInterval(matchInterval);
+
+          statusBall.style.display = "none";
+
+          const endP = document.createElement("p");
+          endP.innerHTML = `<strong style="color: var(--accent-green);">90' Hakem son düdüğü çaldı! Maç Sonucu: ${homeScore} - ${awayScore}</strong>`;
+          commentaryBox.prepend(endP);
+          
+          updatePlayersPostMatch();
+          const finalTable = simulateOtherMatches(homeScore, awayScore);
+
+          if (currentWeek < 22) {
+            currentWeek++;
+            document.getElementById("week-display").innerText = currentWeek;
+            
+            currentOpponentIndex = (currentOpponentIndex % (teams.length - 1)) + 1;
+            updateOpponentDisplay();
+
+            playBtn.innerText = "Sıradaki Maç";
+          } else {
+            currentWeek = 23;
+            
+            if (finalTable.length > 0 && finalTable[0].isUser) {
+              championships++;
+              renderStars();
+              alert(`TEBRİKLER! ${myTeamName} Sezonu ŞAMPİYON Olarak Tamamladı! 🏆`);
+            } else {
+              alert("Sezon sona erdi. Şampiyonluğu kaçırdınız!");
+            }
+
+            playBtn.innerText = "Yeni Sezona Başla";
+          }
+          
+          playBtn.style.display = "inline-flex";
+          saveGameData();
+        }
+      }, 800);
+    }
+
+    function initGameUI() {
+      document.getElementById("my-team-name-score").innerText = myTeamName;
+      document.getElementById("budget-display").innerText = budget;
+      document.getElementById("week-display").innerText = currentWeek > 22 ? 22 : currentWeek;
+
+      const playBtn = document.getElementById("play-btn");
+      if (currentWeek > 22) {
+        playBtn.innerText = "Yeni Sezona Başla";
+      }
+
+      renderStars();
+      renderPlayers();
+      renderTransferCandidate();
+      renderLeagueTable();
+      updateOpponentDisplay();
+    }
+
+    function initGame() {
+      const hasSave = loadGameData();
+      if (!hasSave) {
+        document.getElementById("difficulty-modal").style.display = "flex";
+      } else {
+        initGameUI();
+      }
+    }
+
+    initGame();
+  </script>
+</body>
+</html>
