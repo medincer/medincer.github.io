@@ -418,6 +418,15 @@
       { id: 11, name: "GLTSR", skill: 44, fitness: 70, isUser: false, gf: 0, ga: 0, pts: 0 }
     ];
 
+    const defaultBackupTeams = [
+      { name: "DYRBKRSP", skill: 34, fitness: 60 },
+      { name: "CRMF", skill: 30, fitness: 58 },
+      { name: "ERZRMSP", skill: 32, fitness: 62 },
+      { name: "EYPSP", skill: 36, fitness: 65 },
+      { name: "GZTPSP", skill: 35, fitness: 63 },
+      { name: "KSMP", skill: 33, fitness: 61 }
+    ];
+
     const defaultPlayers = [
       { id: 1, name: "Lamin Yamala", skill: 4, fitness: 7, value: 130, selected: true },
       { id: 2, name: "Matea Kovasik", skill: 4, fitness: 7, value: 140, selected: true },
@@ -454,7 +463,7 @@
       { id: 112, name: "Rafaell Leo", skill: 4, fitness: 8, value: 150 }
     ];
 
-    let myTeamName, budget, currentWeek, teams, players, currentOpponentIndex, transferPool, currentCandidateIndex, championships, transfersMadeThisSeason, difficulty;
+    let myTeamName, budget, currentWeek, teams, backupTeams, players, currentOpponentIndex, transferPool, currentCandidateIndex, championships, transfersMadeThisSeason, difficulty;
 
     function selectDifficulty(mode) {
       difficulty = mode;
@@ -486,6 +495,7 @@
         budget = parsed.budget;
         currentWeek = parsed.currentWeek;
         teams = parsed.teams;
+        backupTeams = parsed.backupTeams || JSON.parse(JSON.stringify(defaultBackupTeams));
         players = parsed.players;
         currentOpponentIndex = parsed.currentOpponentIndex;
         transferPool = parsed.transferPool || JSON.parse(JSON.stringify(defaultTransferPool));
@@ -504,6 +514,7 @@
       budget = difficulty === "easy" ? 200 : 50;
       currentWeek = defaultCurrentWeek;
       teams = JSON.parse(JSON.stringify(defaultTeams));
+      backupTeams = JSON.parse(JSON.stringify(defaultBackupTeams));
       players = JSON.parse(JSON.stringify(defaultPlayers));
       currentOpponentIndex = 1;
       transferPool = JSON.parse(JSON.stringify(defaultTransferPool));
@@ -514,7 +525,7 @@
 
     function saveGameData() {
       const gameState = {
-        myTeamName, budget, currentWeek, teams, players,
+        myTeamName, budget, currentWeek, teams, backupTeams, players,
         currentOpponentIndex, transferPool, currentCandidateIndex, championships, transfersMadeThisSeason, difficulty
       };
       localStorage.setItem("football_manager_save", JSON.stringify(gameState));
@@ -614,10 +625,53 @@
     }
 
     function restartNewSeason() {
-      if (confirm("Yeni sezona başlamak istediğinize emin misiniz? Transfer haklarınız yenilenecek ve lig puanları sıfırlanacak.")) {
+      if (confirm("Yeni sezona başlamak istediğinize emin misiniz? Küme düşen takımlar yenilenecek, transfer haklarınız yenilenecek ve lig puanları sıfırlanacak.")) {
         currentWeek = 1;
         currentOpponentIndex = 1;
         transfersMadeThisSeason = 0;
+
+        // SEZON SONU KÜME DÜŞME / YENİ TAKIMLARIN LİGE DAHİL OLMASI
+        const sorted = [...teams].sort((a, b) => {
+          if (b.pts !== a.pts) return b.pts - a.pts;
+          const avgA = a.gf - a.ga;
+          const avgB = b.gf - b.ga;
+          if (avgB !== avgA) return avgB - avgA;
+          return b.gf - a.gf;
+        });
+
+        // Son 2 takımı tespit et
+        const relegatedTeams = sorted.slice(-2);
+        
+        relegatedTeams.forEach(relegated => {
+          // Kullanıcı küme düşse dahi elenmesin, korunsun
+          if (relegated.isUser) return;
+
+          // Yedek takımlardan rastgele 1 takım seç
+          const randomIndex = Math.floor(Math.random() * backupTeams.length);
+          const promotedTeam = backupTeams.splice(randomIndex, 1)[0];
+
+          // Düşen takımı ligdeki takımlardan çıkar ve yeni takımı ekle
+          const teamIdx = teams.findIndex(t => t.id === relegated.id);
+          if (teamIdx !== -1) {
+            teams[teamIdx] = {
+              id: relegated.id,
+              name: promotedTeam.name,
+              skill: promotedTeam.skill,
+              fitness: promotedTeam.fitness,
+              isUser: false,
+              gf: 0,
+              ga: 0,
+              pts: 0
+            };
+          }
+
+          // Düşen takımı yedek havuza geri ekle
+          backupTeams.push({
+            name: relegated.name,
+            skill: relegated.skill,
+            fitness: relegated.fitness
+          });
+        });
 
         players.forEach(p => {
           if (Math.random() < 0.3) {
@@ -843,7 +897,6 @@
       return renderLeagueTable();
     }
 
-    // SEÇİLEN ZORLUK MODUNA GÖRE ÇALIŞAN FORM MEKANİZMASI
     function updatePlayersPostMatch() {
       const minFitness = difficulty === "easy" ? 5 : 1;
       const recoveryChance = difficulty === "easy" ? 0.8 : 0.5;
@@ -855,14 +908,12 @@
               player.fitness = Math.max(minFitness, player.fitness - 1);
             }
           } else {
-            // Zor Mod: Düşüş riski yüksek, form 1'e kadar çakılabilir
             if (Math.random() < 0.7) {
               const drop = Math.floor(Math.random() * 2) + 1;
               player.fitness = Math.max(minFitness, player.fitness - drop);
             }
           }
         } else {
-          // Yedek oyuncu iyileşmesi
           if (player.fitness < 10 && Math.random() < recoveryChance) {
             player.fitness = Math.min(10, player.fitness + 1);
           }
@@ -877,25 +928,25 @@
     let awayScore = 0;
 
     const commentaryEvents = [
-  "orta sahada pas trafiği devam ediyor.",
-  "sağ kanattan hızlı çıktı ama defans zamanında araya girdi.",
-  "uzaktan sert bir şut! Top az farkla üstten avuta gidiyor.",
-  "orta alanda sert bir faul, hakem oyunu durdurdu.",
-  "kaleciyle karşı karşıya pozisyon... Son anda korner!",
-  "tehlikeli bir noktadan serbest vuruş! Top barajdan dönüyor.",
-  "ikili mücadelede top taca çıkıyor.",
-  "sol kanattan yapılan etkili ortayı savunma uzaklaştırdı.",
-  "rakip yarı alanda baskı artıyor, defans hata yapmamak için dikkatli.",
-  "ceza sahası dışından klas bir plase! Kaleci son anda kornere çeldi.",
-  "savunmanın arkasına sarkan tehlikeli bir pas, ama bayrak havada... Ofsayt!",
-  "beklenmedik bir top kaybı! Rakip takım hızlı hücuma kalkıyor.",
-  "köşe vuruşundan gelen topa iyi bir kafa vuruşu! Top direğin hemen yanından dışarıda.",
-  "hücum yönü hızla değişiyor, oyun şimdi sol kanada kaydı.",
-  "ceza sahası içinde büyük bir karambol! Savunma son anda topu uzaklaştırdı.",
-  "hakem avantajı uyguladı, oyun kesintisiz devam ediyor.",
-  "çaprazdan sert bir vuruş! Top kalecinin kucağında kalıyor.",
-  "baskı sonuç verdi! Rakip yarı sahada kritik bir top kazanımı."
-];
+      "orta sahada pas trafiği devam ediyor.",
+      "sağ kanattan hızlı çıktı ama defans zamanında araya girdi.",
+      "uzaktan sert bir şut! Top az farkla üstten avuta gidiyor.",
+      "orta alanda sert bir faul, hakem oyunu durdurdu.",
+      "kaleciyle karşı karşıya pozisyon... Son anda korner!",
+      "tehlikeli bir noktadan serbest vuruş! Top barajdan dönüyor.",
+      "ikili mücadelede top taca çıkıyor.",
+      "sol kanattan yapılan etkili ortayı savunma uzaklaştırdı.",
+      "rakip yarı alanda baskı artıyor, defans hata yapmamak için dikkatli.",
+      "ceza sahası dışından klas bir plase! Kaleci son anda kornere çeldi.",
+      "savunmanın arkasına sarkan tehlikeli bir pas, ama bayrak havada... Ofsayt!",
+      "beklenmedik bir top kaybı! Rakip takım hızlı hücuma kalkıyor.",
+      "köşe vuruşundan gelen topa iyi bir kafa vuruşu! Top direğin hemen yanından dışarıda.",
+      "hücum yönü hızla değişiyor, oyun şimdi sol kanada kaydı.",
+      "ceza sahası içinde büyük bir karambol! Savunma son anda topu uzaklaştırdı.",
+      "hakem avantajı uyguladı, oyun kesintisiz devam ediyor.",
+      "çaprazdan sert bir vuruş! Top kalecinin kucağında kalıyor.",
+      "baskı sonuç verdi! Rakip yarı sahada kritik bir top kazanımı."
+    ];
 
     function startMatch() {
       const selectedPlayers = players.filter(p => p.selected);
