@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href='https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700;800&amp;display=swap' rel='stylesheet'/>
-  <title>Futbol Menajeri</title>
+  <link href='https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700;800&display=swap' rel='stylesheet'/>
+  <title>Futbol Menajeri v2.0</title>
   <style>
     body {
       background-color: #121212;
       color: #e0e0e0;
-      font-family: Roboto Mono, monospaced;
+      font-family: 'Roboto Mono', monospace;
       display: flex;
       justify-content: center;
-      padding: 20px;
+      padding: 15px;
       margin: 0;
     }
 
@@ -20,7 +20,7 @@
       width: 100%;
       max-width: 480px;
     }
-    
+
     @media (min-width: 768px) {
       .game-container {
         max-width: 960px;
@@ -29,31 +29,29 @@
         gap: 24px;
         align-items: start;
       }
-
-      .left-column, .right-column {
-        display: flex;
-        flex-direction: column;
-      }
     }
 
     .card-box {
       border: 1px solid #ffffff;
-      padding: 12px;
+      padding: 14px;
       margin-bottom: 20px;
       background-color: #000000;
-      border-radius: 4px;
+      border-radius: 6px;
     }
 
     .card-title {
       font-weight: bold;
       font-size: 16px;
       margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .sub-text {
       color: #aaaaaa;
-      font-size: 14px;
-      line-height: 1.4;
+      font-size: 13px;
+      line-height: 1.5;
     }
 
     .editable-team {
@@ -67,14 +65,14 @@
       display: flex;
       gap: 15px;
       align-items: center;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     #play-btn {
       background: none;
       border: none;
       color: #2ecc71;
-      font-family: Roboto Mono, monospaced;
+      font-family: 'Roboto Mono', monospace;
       font-size: 16px;
       font-weight: bold;
       text-decoration: underline;
@@ -86,8 +84,8 @@
       background: none;
       border: none;
       color: #e74c3c;
-      font-family: Roboto Mono, monospaced;
-      font-size: 14px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 13px;
       font-weight: bold;
       text-decoration: underline;
       cursor: pointer;
@@ -95,7 +93,7 @@
     }
 
     .timer-line {
-      font-size: 15px;
+      font-size: 14px;
       color: #2ecc71;
       font-weight: bold;
       margin-bottom: 8px;
@@ -120,12 +118,12 @@
     }
 
     #commentary-box {
-      height: 130px;
+      height: 140px;
       overflow-y: auto;
       border-top: 1px dashed #444;
       padding-top: 8px;
-      font-size: 13px;
-      line-height: 1.4;
+      font-size: 12px;
+      line-height: 1.5;
     }
 
     #commentary-box p {
@@ -134,7 +132,7 @@
 
     .section-title, .player-row {
       display: grid;
-      grid-template-columns: 1fr 35px 35px 60px;
+      grid-template-columns: 1fr 40px 40px 65px;
       align-items: center;
       gap: 6px;
       font-size: 13px;
@@ -146,12 +144,12 @@
     }
 
     .player-row {
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .league-header, .table-row {
       display: grid;
-      grid-template-columns: 1fr 35px 35px 40px 35px;
+      grid-template-columns: 1fr 30px 30px 40px 35px;
       align-items: center;
       gap: 4px;
       font-size: 13px;
@@ -191,7 +189,7 @@
       display: inline-block;
     }
 
-    .price, .action-links a, .sell-btn {
+    .sell-btn {
       color: #2ecc71;
       text-decoration: underline;
       cursor: pointer;
@@ -204,11 +202,17 @@
       margin-top: 10px;
     }
 
+    .action-links a {
+      color: #2ecc71;
+      text-decoration: underline;
+      font-size: 13px;
+    }
+
     .team-stats {
       margin: 15px 0;
       font-size: 13px;
       font-weight: bold;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .highlighted {
@@ -216,9 +220,7 @@
       font-weight: bold;
     }
 
-    .text-center {
-      text-align: center;
-    }
+    .text-center { text-align: center; }
 
     .starter-count {
       font-size: 12px;
@@ -228,16 +230,14 @@
     .transfer-limit-info {
       color: #f1c40f;
       font-size: 12px;
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
     .difficulty-modal {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.92);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -262,17 +262,11 @@
       background: none;
       border: 1px solid #2ecc71;
       color: #2ecc71;
-      font-family: Roboto Mono, monospaced;
+      font-family: 'Roboto Mono', monospace;
       font-weight: bold;
-      font-size: 15px;
+      font-size: 14px;
       cursor: pointer;
       border-radius: 4px;
-      transition: all 0.2s;
-    }
-
-    .difficulty-btn:hover {
-      background-color: #2ecc71;
-      color: #000;
     }
 
     .difficulty-btn.hard {
@@ -280,16 +274,10 @@
       color: #e74c3c;
     }
 
-    .difficulty-btn.hard:hover {
-      background-color: #e74c3c;
-      color: #000;
-    }
-
     .mode-badge {
-      font-size: 12px;
+      font-size: 11px;
       padding: 2px 6px;
       border-radius: 3px;
-      margin-left: 6px;
       text-transform: uppercase;
       font-weight: bold;
     }
@@ -301,22 +289,22 @@
 
   <div id="difficulty-modal" class="difficulty-modal" style="display: none;">
     <div class="modal-content">
-      <h2 style="margin-top:0; color:#fff;">Oyun Zorluğu Seçin</h2>
+      <h2 style="margin-top:0; color:#fff;">Kariyer Zorluğu</h2>
       <p class="sub-text" style="margin-bottom: 20px;">
-        Kariyerinize başlamadan önce ligdeki form ve ekonomik şartların zorluğunu belirleyin.
+        Sezon içi kondisyon düşüşü ve başlangıç ekonomik gücünüzü seçin.
       </p>
-      
+
       <button class="difficulty-btn" onclick="selectDifficulty('easy')">
         Kolay Mod
         <div style="font-size: 11px; font-weight: normal; margin-top: 4px; opacity: 0.8;">
-          Form düşüşü sınırlı (Min: 5), Bütçe: $200
+          Min. Form: %50 | Bütçe: $200
         </div>
       </button>
-      
+
       <button class="difficulty-btn hard" onclick="selectDifficulty('hard')">
         Zor Mod
         <div style="font-size: 11px; font-weight: normal; margin-top: 4px; opacity: 0.8;">
-          Form 1'e kadar çakılabilir, Bütçe:	$50
+          Min. Form: %10 | Bütçe: $50
         </div>
       </button>
     </div>
@@ -328,25 +316,25 @@
       <div class="card-box">
         <div id="match-view">
           <div class="card-title">
-            Maç Haftası: <span id="week-display">1</span>/22
-            <span id="star-display" style="color: #f1c40f; margin-left: 4px;"></span>
+            <span>Hafta: <span id="week-display">1</span>/22 <span id="star-display" style="color: #f1c40f;"></span></span>
             <span id="difficulty-badge" class="mode-badge"></span>
           </div>
-          <p class="score-line">
-            <span id="my-team-name-score" class="editable-team" onclick="changeTeamName()" title="Takım ismini değiştirmek için tıkla">Anadolu Kaplanları</span> 
-            <span id="home-score">0</span> - <span id="away-score">0</span> <span id="opponent-name-score">Kadıköy SK</span>
+          <p class="score-line" style="font-size:15px; font-weight:bold;">
+            <span id="home-team-name">Anadolu</span> 
+            <span id="home-score">0</span> - <span id="away-score">0</span> 
+            <span id="away-team-name">Kadıköy SK</span>
           </p>
           <p class="sub-text" id="opponent-info-display">
-            Sıradaki Maç: Kadıköy SK<br>Yetenek (Y): -- &nbsp;&nbsp; Form (F): %--
+            Sıradaki Maç Yükleniyor...
           </p>
-          
+
           <div class="action-btn-group">
             <button id="play-btn" onclick="handlePlayButtonClick()">Maça Başla</button>
-            <button id="reset-btn" onclick="resetGame()">Sıfırla</button>
+            <button id="reset-btn" onclick="resetGame()">Kariyeri Sıfırla</button>
           </div>
         </div>
 
-        <div id="commentary-section" style="display: none; margin-top: 10px;">
+        <div id="commentary-section" style="display: none; margin-top: 12px;">
           <div class="timer-line">
             <span id="status-ball" class="live-ball"></span>
             Dakika: <span id="match-minute">0</span>'
@@ -359,12 +347,11 @@
         <span>Oyuncular (<span id="player-count">18</span>/18) <span class="starter-count">#<span id="selected-count">11</span>/11</span></span>
         <span class="text-center">Ytnk</span>
         <span class="text-center">Form</span>
-        <span style="text-align: right;">Satış</span>
+        <span style="text-align: right;">Sat</span>
       </div>
       <hr class="divider">
-      
-      <div class="player-list" id="player-list-container">
-      </div>
+
+      <div class="player-list" id="player-list-container"></div>
 
       <div class="team-stats" id="team-stats-display">
         Yetenek: -- &nbsp;&nbsp; Form: %--<br>
@@ -374,13 +361,12 @@
 
     <div class="right-column">
       <div class="card-box">
-        <div class="card-title">Transferler &nbsp;&nbsp; Bütçe: $<span id="budget-display">400</span></div>
-        <p class="sub-text" style="color:#e0e0e0;" id="transfer-candidate-info">
-        </p>
+        <div class="card-title">Transfer Pazarı &nbsp;&nbsp; Bütçe: $<span id="budget-display">400</span></div>
+        <p class="sub-text" style="color:#e0e0e0;" id="transfer-candidate-info"></p>
         <div class="transfer-limit-info">Kalan Transfer Hakkı: <span id="transfer-limit-display">3</span>/3</div>
         <div class="action-links">
           <a href="#" id="buy-btn" onclick="buyCurrentPlayer(); return false;">Satın Al</a>
-          <a href="#" onclick="nextTransferCandidate(); return false;" style="color:#aaaaaa;">Sıradaki &raquo;</a>
+          <a href="#" onclick="nextTransferCandidate(); return false;" style="color:#aaaaaa;">Sıradaki Candidate &raquo;</a>
         </div>
       </div>
 
@@ -392,8 +378,7 @@
         <span>P</span>
       </div>
       <hr class="divider">
-      <div class="league-table" id="league-table-container">
-      </div>
+      <div class="league-table" id="league-table-container"></div>
     </div>
 
   </div>
@@ -419,9 +404,9 @@
     ];
 
     const defaultBackupTeams = [
-      { name: "DYRBKRSP", skill: 30, fitness: 58 },
-      { name: "CRMF", skill: 28, fitness: 56 },
-      { name: "ERZRMSP", skill: 30, fitness: 58 },
+      { name: "DYRBKR", skill: 30, fitness: 58 },
+      { name: "CRMFK", skill: 28, fitness: 56 },
+      { name: "ERZRM", skill: 30, fitness: 58 },
       { name: "EYPSP", skill: 32, fitness: 60 },
       { name: "GZTPSP", skill: 34, fitness: 62 },
       { name: "KSMP", skill: 32, fitness: 60 }
@@ -463,7 +448,34 @@
       { id: 112, name: "Rafaell Leo", skill: 4, fitness: 8, value: 150 }
     ];
 
-    let myTeamName, budget, currentWeek, teams, backupTeams, players, currentOpponentIndex, transferPool, currentCandidateIndex, championships, transfersMadeThisSeason, difficulty;
+    let myTeamName, budget, currentWeek, teams, backupTeams, players, transferPool, currentCandidateIndex, championships, transfersMadeThisSeason, difficulty, fixtureSchedule = [];
+
+    function generateFixtures() {
+      const teamIds = teams.map(t => t.id);
+      const numTeams = teamIds.length;
+      const rounds = numTeams - 1;
+      const half = numTeams / 2;
+      fixtureSchedule = [];
+
+      let pool = [...teamIds];
+
+      for (let r = 0; r < rounds; r++) {
+        let roundMatches = [];
+        for (let i = 0; i < half; i++) {
+          const home = pool[i];
+          const away = pool[numTeams - 1 - i];
+          roundMatches.push({ home, away });
+        }
+        fixtureSchedule.push(roundMatches);
+        pool.splice(1, 0, pool.pop());
+      }
+
+      // İkinci yarı (Rövanşlar)
+      for (let r = 0; r < rounds; r++) {
+        let roundMatches = fixtureSchedule[r].map(m => ({ home: m.away, away: m.home }));
+        fixtureSchedule.push(roundMatches);
+      }
+    }
 
     function selectDifficulty(mode) {
       difficulty = mode;
@@ -476,7 +488,7 @@
     function renderStars() {
       const starDisplay = document.getElementById("star-display");
       starDisplay.innerText = championships > 0 ? "★".repeat(championships) : "";
-      
+
       const badge = document.getElementById("difficulty-badge");
       if (difficulty === "easy") {
         badge.innerText = "KOLAY";
@@ -497,12 +509,12 @@
         teams = parsed.teams;
         backupTeams = parsed.backupTeams || JSON.parse(JSON.stringify(defaultBackupTeams));
         players = parsed.players;
-        currentOpponentIndex = parsed.currentOpponentIndex;
         transferPool = parsed.transferPool || JSON.parse(JSON.stringify(defaultTransferPool));
         currentCandidateIndex = parsed.currentCandidateIndex || 0;
         championships = parsed.championships || 0;
         transfersMadeThisSeason = parsed.transfersMadeThisSeason || 0;
         difficulty = parsed.difficulty || "easy";
+        generateFixtures();
         return true;
       }
       return false;
@@ -516,23 +528,23 @@
       teams = JSON.parse(JSON.stringify(defaultTeams));
       backupTeams = JSON.parse(JSON.stringify(defaultBackupTeams));
       players = JSON.parse(JSON.stringify(defaultPlayers));
-      currentOpponentIndex = 1;
       transferPool = JSON.parse(JSON.stringify(defaultTransferPool));
       currentCandidateIndex = 0;
       championships = 0;
       transfersMadeThisSeason = 0;
+      generateFixtures();
     }
 
     function saveGameData() {
       const gameState = {
         myTeamName, budget, currentWeek, teams, backupTeams, players,
-        currentOpponentIndex, transferPool, currentCandidateIndex, championships, transfersMadeThisSeason, difficulty
+        transferPool, currentCandidateIndex, championships, transfersMadeThisSeason, difficulty
       };
       localStorage.setItem("football_manager_save", JSON.stringify(gameState));
     }
 
     function resetGame() {
-      if (confirm("Oyunu sıfırlamak ve zorluk seçim ekranına dönmek istediğinizden emin misiniz?")) {
+      if (confirm("Kariyer sıfırlanacak ve zorluk ekranı açılacak. Emin misiniz?")) {
         localStorage.removeItem("football_manager_save");
         document.getElementById("difficulty-modal").style.display = "flex";
       }
@@ -543,8 +555,7 @@
       const buyBtn = document.getElementById("buy-btn");
       const limitDisplay = document.getElementById("transfer-limit-display");
 
-      const remainingTransfers = MAX_TRANSFERS_PER_SEASON - transfersMadeThisSeason;
-      limitDisplay.innerText = remainingTransfers;
+      limitDisplay.innerText = MAX_TRANSFERS_PER_SEASON - transfersMadeThisSeason;
 
       if (transferPool.length === 0) {
         infoBox.innerHTML = "Transfer pazarında oyuncu kalmadı.";
@@ -553,12 +564,10 @@
       }
 
       buyBtn.style.display = "inline";
-      if (currentCandidateIndex >= transferPool.length) {
-        currentCandidateIndex = 0;
-      }
+      if (currentCandidateIndex >= transferPool.length) currentCandidateIndex = 0;
 
       const player = transferPool[currentCandidateIndex];
-      infoBox.innerHTML = `${player.name} $${player.value} fiyatına al<br>Yetenek: ${player.skill} &nbsp;&nbsp; Form: ${player.fitness}`;
+      infoBox.innerHTML = `${player.name} - <strong>$${player.value}</strong><br>Yetenek: ${player.skill} &nbsp;&nbsp; Form: ${player.fitness}`;
       buyBtn.innerText = `Satın Al ($${player.value})`;
     }
 
@@ -573,12 +582,12 @@
       if (transferPool.length === 0) return;
 
       if (transfersMadeThisSeason >= MAX_TRANSFERS_PER_SEASON) {
-        alert("Bu sezonluk transfer hakkınızı doldurdunuz (En fazla 3 transfer)! Yeni sezonda tekrar hakkınız açılacaktır.");
+        alert("Bu sezonluk transfer limitinize ulaştınız (Max: 3)!");
         return;
       }
 
       if (players.length >= 18) {
-        alert("Kadronuz dolu (En fazla 18 oyuncu)! Transfer yapmak için önce oyuncu satmalısınız.");
+        alert("Kadro kapasitesi dolu (Max: 18 oyuncu)! Önce bir oyuncu satın.");
         return;
       }
 
@@ -593,23 +602,17 @@
       transfersMadeThisSeason++;
       document.getElementById("budget-display").innerText = budget;
 
-      const newPlayer = {
+      players.push({
         id: Date.now(),
         name: candidate.name,
         skill: candidate.skill,
         fitness: candidate.fitness,
         value: candidate.value,
         selected: false
-      };
+      });
 
-      players.push(newPlayer);
       transferPool.splice(currentCandidateIndex, 1);
-      
-      alert(`${newPlayer.name} kadronuza katıldı! (Kalan transfer hakkınız: ${MAX_TRANSFERS_PER_SEASON - transfersMadeThisSeason})`);
-
-      if (currentCandidateIndex >= transferPool.length) {
-        currentCandidateIndex = 0;
-      }
+      alert(`${candidate.name} başarıyla transfer edildi!`);
 
       renderPlayers();
       renderTransferCandidate();
@@ -625,79 +628,33 @@
     }
 
     function restartNewSeason() {
-      if (confirm("Yeni sezona başlamak istediğinize emin misiniz? Küme düşen takımlar yenilenecek, transfer haklarınız yenilenecek ve lig puanları sıfırlanacak.")) {
+      if (confirm("Yeni sezona başlanıyor. Fikstür yenilenecek ve lig puanları sıfırlanacak.")) {
         currentWeek = 1;
-        currentOpponentIndex = 1;
         transfersMadeThisSeason = 0;
 
-        // SEZON SONU KÜME DÜŞME / YENİ TAKIMLARIN LİGE DAHİL OLMASI
-        const sorted = [...teams].sort((a, b) => {
-          if (b.pts !== a.pts) return b.pts - a.pts;
-          const avgA = a.gf - a.ga;
-          const avgB = b.gf - b.ga;
-          if (avgB !== avgA) return avgB - avgA;
-          return b.gf - a.gf;
-        });
+        const sorted = [...teams].sort((a, b) => b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga));
+        const relegated = sorted.slice(-2);
 
-        // Son 2 takımı tespit et
-        const relegatedTeams = sorted.slice(-2);
-        
-        relegatedTeams.forEach(relegated => {
-          // Kullanıcı küme düşse dahi elenmesin, korunsun
-          if (relegated.isUser) return;
-
-          // Yedek takımlardan rastgele 1 takım seç
+        relegated.forEach(rel => {
+          if (rel.isUser) return;
           const randomIndex = Math.floor(Math.random() * backupTeams.length);
-          const promotedTeam = backupTeams.splice(randomIndex, 1)[0];
+          const promoted = backupTeams.splice(randomIndex, 1)[0];
 
-          // Düşen takımı ligdeki takımlardan çıkar ve yeni takımı ekle
-          const teamIdx = teams.findIndex(t => t.id === relegated.id);
-          if (teamIdx !== -1) {
-            teams[teamIdx] = {
-              id: relegated.id,
-              name: promotedTeam.name,
-              skill: promotedTeam.skill,
-              fitness: promotedTeam.fitness,
-              isUser: false,
-              gf: 0,
-              ga: 0,
-              pts: 0
-            };
+          const tIdx = teams.findIndex(t => t.id === rel.id);
+          if (tIdx !== -1) {
+            teams[tIdx] = { id: rel.id, name: promoted.name, skill: promoted.skill, fitness: promoted.fitness, isUser: false, gf: 0, ga: 0, pts: 0 };
           }
-
-          // Düşen takımı yedek havuza geri ekle
-          backupTeams.push({
-            name: relegated.name,
-            skill: relegated.skill,
-            fitness: relegated.fitness
-          });
+          backupTeams.push({ name: rel.name, skill: rel.skill, fitness: rel.fitness });
         });
 
-        players.forEach(p => {
-          if (Math.random() < 0.3) {
-            const skillChange = Math.floor(Math.random() * 3) - 1;
-            p.skill = Math.max(1, Math.min(5, p.skill + skillChange));
-          }
-          p.fitness = Math.floor(Math.random() * 3) + 7;
-        });
-
-        teams.forEach(t => {
-          t.gf = 0;
-          t.ga = 0;
-          t.pts = 0;
-          if(!t.isUser) {
-            t.skill = Math.max(28, Math.min(52, t.skill + (Math.floor(Math.random() * 3) - 1)));
-            t.fitness = Math.floor(Math.random() * 15) + 65;
-          }
-        });
+        teams.forEach(t => { t.gf = 0; t.ga = 0; t.pts = 0; });
+        generateFixtures();
 
         document.getElementById("week-display").innerText = currentWeek;
         document.getElementById("home-score").innerText = "0";
         document.getElementById("away-score").innerText = "0";
         document.getElementById("commentary-section").style.display = "none";
-        
-        const playBtn = document.getElementById("play-btn");
-        playBtn.innerText = "Maça Başla";
+        document.getElementById("play-btn").innerText = "Maça Başla";
 
         renderPlayers();
         renderTransferCandidate();
@@ -708,35 +665,50 @@
     }
 
     function changeTeamName() {
-      const newName = prompt("Yeni takım isminizi girin:", myTeamName);
+      const newName = prompt("Yeni Takım İsmi:", myTeamName);
       if (newName && newName.trim() !== "") {
         myTeamName = newName.trim();
-        
         const userTeam = teams.find(t => t.isUser);
         if (userTeam) userTeam.name = myTeamName;
-
-        document.getElementById("my-team-name-score").innerText = myTeamName;
+        updateOpponentDisplay();
         renderLeagueTable();
         saveGameData();
       }
     }
 
+    function getCurrentUserMatch() {
+      if (currentWeek > 22) return null;
+      const weekMatches = fixtureSchedule[currentWeek - 1];
+      const userTeam = teams.find(t => t.isUser);
+      return weekMatches.find(m => m.home === userTeam.id || m.away === userTeam.id);
+    }
+
     function updateOpponentDisplay() {
-      const opp = teams[currentOpponentIndex];
-      document.getElementById("opponent-name-score").innerText = opp.name;
+      const match = getCurrentUserMatch();
+      if (!match) return;
+
+      const userTeam = teams.find(t => t.isUser);
+      const isHome = match.home === userTeam.id;
+      const oppId = isHome ? match.away : match.home;
+      const opp = teams.find(t => t.id === oppId);
+
+      document.getElementById("home-team-name").innerText = isHome ? userTeam.name : opp.name;
+      document.getElementById("away-team-name").innerText = isHome ? opp.name : userTeam.name;
+
+      if(isHome) {
+        document.getElementById("home-team-name").className = "editable-team";
+        document.getElementById("home-team-name").onclick = changeTeamName;
+      } else {
+        document.getElementById("away-team-name").className = "editable-team";
+        document.getElementById("away-team-name").onclick = changeTeamName;
+      }
+
       document.getElementById("opponent-info-display").innerHTML = 
-        `Sıradaki Maç: ${opp.name}<br>Yetenek: ${opp.skill} &nbsp;&nbsp; Form: %${opp.fitness}`;
+        `Sıradaki Rakip: <strong>${opp.name}</strong> (${isHome ? 'Evindesin' : 'Deplasman'})<br>Yetenek: ${opp.skill} &nbsp;&nbsp; Form: %${opp.fitness}`;
     }
 
     function renderLeagueTable() {
-      const sortedTeams = [...teams].sort((a, b) => {
-        if (b.pts !== a.pts) return b.pts - a.pts;
-        const avgA = a.gf - a.ga;
-        const avgB = b.gf - b.ga;
-        if (avgB !== avgA) return avgB - avgA;
-        return b.gf - a.gf;
-      });
-
+      const sortedTeams = [...teams].sort((a, b) => b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga) || b.gf - a.gf);
       const container = document.getElementById("league-table-container");
       container.innerHTML = "";
 
@@ -744,7 +716,6 @@
         const avg = team.gf - team.ga;
         const row = document.createElement("div");
         row.className = `table-row ${team.isUser ? 'highlighted' : ''}`;
-        
         row.innerHTML = `
           <span>${idx + 1}. ${team.name}</span> 
           <span>${team.gf}</span>
@@ -754,21 +725,16 @@
         `;
         container.appendChild(row);
       });
-
       return sortedTeams;
     }
 
     function renderPlayers() {
       const container = document.getElementById("player-list-container");
       container.innerHTML = "";
-
       let selectedPlayers = [];
 
       players.forEach((player) => {
-        if (player.selected) {
-          selectedPlayers.push(player);
-        }
-
+        if (player.selected) selectedPlayers.push(player);
         const row = document.createElement("div");
         row.className = "player-row";
         row.innerHTML = `
@@ -786,21 +752,18 @@
       document.getElementById("player-count").innerText = players.length;
       document.getElementById("selected-count").innerText = selectedPlayers.length;
 
-      let totalSkill = 0;
-      let avgFitness = "0";
-      let overallRating = 0;
+      let totalSkill = 0, avgFitness = "0", overallRating = 0;
 
       if (selectedPlayers.length > 0) {
         totalSkill = selectedPlayers.reduce((acc, p) => acc + p.skill, 0);
         let totalFitness = selectedPlayers.reduce((acc, p) => acc + p.fitness, 0);
-
         avgFitness = Math.round((totalFitness / (selectedPlayers.length * 10)) * 100);
-        
+
         const skillRating = (totalSkill / 55) * 50;
         const fitnessRating = (avgFitness / 100) * 50;
         overallRating = Math.min(100, Math.round(skillRating + fitnessRating));
       }
-      
+
       const userTeam = teams.find(t => t.isUser);
       if (userTeam) {
         userTeam.skill = totalSkill;
@@ -823,75 +786,44 @@
 
     function sellPlayer(id) {
       if (players.length <= 11) {
-        alert("Kadroda en az 11 oyuncu kalmalıdır!");
+        alert("En az 11 oyuncu kalmalıdır!");
         return;
       }
-
       const index = players.findIndex(p => p.id === id);
       if (index !== -1) {
-        const soldPlayer = players[index];
-        budget += soldPlayer.value;
+        budget += players[index].value;
         players.splice(index, 1);
-        
         document.getElementById("budget-display").innerText = budget;
-        alert(`${soldPlayer.name} $${soldPlayer.value} fiyatına satıldı.`);
         renderPlayers();
         saveGameData();
       }
     }
 
-    function simulateOtherMatches(userHomeGoals, userAwayGoals) {
-      const userTeam = teams.find(t => t.isUser);
-      const oppTeam = teams[currentOpponentIndex];
+    function simulateWeekMatches(userMatch, userHomeGoals, userAwayGoals) {
+      const weekMatches = fixtureSchedule[currentWeek - 1];
 
-      userTeam.gf += userHomeGoals;
-      userTeam.ga += userAwayGoals;
-      oppTeam.gf += userAwayGoals;
-      oppTeam.ga += userHomeGoals;
+      weekMatches.forEach(match => {
+        const homeTeam = teams.find(t => t.id === match.home);
+        const awayTeam = teams.find(t => t.id === match.away);
 
-      if (userHomeGoals > userAwayGoals) {
-        userTeam.pts += 3;
-      } else if (userHomeGoals < userAwayGoals) {
-        oppTeam.pts += 3;
-      } else {
-        userTeam.pts += 1;
-        oppTeam.pts += 1;
-      }
+        let hG = 0, aG = 0;
 
-      const remainingTeams = teams.filter(t => t.id !== userTeam.id && t.id !== oppTeam.id);
-      
-      for (let i = 0; i < remainingTeams.length; i += 2) {
-        if (i + 1 < remainingTeams.length) {
-          const t1 = remainingTeams[i];
-          const t2 = remainingTeams[i + 1];
-
-          const p1 = t1.skill * (t1.fitness / 100);
-          const p2 = t2.skill * (t2.fitness / 100);
-
-          const g1 = Math.floor(Math.random() * (p1 / 10 + 1));
-          const g2 = Math.floor(Math.random() * (p2 / 10 + 1));
-
-          t1.gf += g1;
-          t1.ga += g2;
-          t2.gf += g2;
-          t2.ga += g1;
-
-          if (g1 > g2) {
-            t1.pts += 3;
-          } else if (g2 > g1) {
-            t2.pts += 3;
-          } else {
-            t1.pts += 1;
-            t2.pts += 1;
-          }
+        if (homeTeam.isUser || awayTeam.isUser) {
+          hG = userHomeGoals;
+          aG = userAwayGoals;
+        } else {
+          const p1 = homeTeam.skill * (homeTeam.fitness / 100);
+          const p2 = awayTeam.skill * (awayTeam.fitness / 100);
+          hG = Math.floor(Math.random() * (p1 / 9 + 1));
+          aG = Math.floor(Math.random() * (p2 / 10 + 1));
         }
-      }
 
-      teams.forEach(t => {
-        if (!t.isUser) {
-          const fitnessDelta = Math.floor(Math.random() * 7) - 3;
-          t.fitness = Math.max(55, Math.min(95, t.fitness + fitnessDelta));
-        }
+        homeTeam.gf += hG; homeTeam.ga += aG;
+        awayTeam.gf += aG; awayTeam.ga += hG;
+
+        if (hG > aG) homeTeam.pts += 3;
+        else if (aG > hG) awayTeam.pts += 3;
+        else { homeTeam.pts += 1; awayTeam.pts += 1; }
       });
 
       return renderLeagueTable();
@@ -899,101 +831,75 @@
 
     function updatePlayersPostMatch() {
       const minFitness = difficulty === "easy" ? 5 : 1;
-      const recoveryChance = difficulty === "easy" ? 0.8 : 0.5;
-
       players.forEach(player => {
         if (player.selected) {
-          if (difficulty === "easy") {
-            if (Math.random() < 0.5) {
-              player.fitness = Math.max(minFitness, player.fitness - 1);
-            }
-          } else {
-            if (Math.random() < 0.7) {
-              const drop = Math.floor(Math.random() * 2) + 1;
-              player.fitness = Math.max(minFitness, player.fitness - drop);
-            }
-          }
+          const drop = difficulty === "easy" ? (Math.random() < 0.5 ? 1 : 0) : Math.floor(Math.random() * 2) + 1;
+          player.fitness = Math.max(minFitness, player.fitness - drop);
         } else {
-          if (player.fitness < 10 && Math.random() < recoveryChance) {
-            player.fitness = Math.min(10, player.fitness + 1);
-          }
+          if (player.fitness < 10) player.fitness++;
         }
       });
       renderPlayers();
     }
 
-    let currentMinute = 0;
-    let matchInterval = null;
-    let homeScore = 0;
-    let awayScore = 0;
+    let currentMinute = 0, matchInterval = null, homeScore = 0, awayScore = 0;
 
     const commentaryEvents = [
       "orta sahada pas trafiği devam ediyor.",
       "sağ kanattan hızlı çıktı ama defans zamanında araya girdi.",
       "uzaktan sert bir şut! Top az farkla üstten avuta gidiyor.",
-      "orta alanda sert bir faul, hakem oyunu durdurdu.",
-      "kaleciyle karşı karşıya pozisyon... Son anda korner!",
-      "tehlikeli bir noktadan serbest vuruş! Top barajdan dönüyor.",
-      "ikili mücadelede top taca çıkıyor.",
-      "sol kanattan yapılan etkili ortayı savunma uzaklaştırdı.",
-      "rakip yarı alanda baskı artıyor, defans hata yapmamaya çalışıyor.",
-      "ceza sahası dışından bir plase! Kaleci son anda kornere çeldi.",
-      "beklenmedik bir top kaybı! Rakip takım hızlı hücuma kalkıyor.",
-      "hücum yönü hızla değişiyor, oyun şimdi sol kanada kaydı.",
-      "hakem avantajı uyguladı, oyun kesintisiz devam ediyor.",
-      "çaprazdan sert bir vuruş! Top kalecinin kucağında kalıyor.",
-      "baskı sonuç verdi! Rakip yarı sahada kritik bir top kazandı."
+      "tehlikeli serbest vuruş! Top barajdan dönüyor.",
+      "sol kanattan yapılan ortayı savunma kafa ile uzaklaştırdı.",
+      "baskı sonuç verdi, ceza sahası dışında tehlikeli an!",
+      "hakem ikili mücadelede faul kararı verdi."
     ];
 
     function startMatch() {
       const selectedPlayers = players.filter(p => p.selected);
       if (selectedPlayers.length !== 11) {
-        alert(`Maça başlayabilmek için TAM OLARAK 11 oyuncu seçmelisiniz! (Şu an seçilen: ${selectedPlayers.length})`);
+        alert("Maça başlamak için 11 oyuncu seçmelisiniz!");
         return;
       }
 
       document.getElementById("commentary-section").style.display = "block";
-      const statusBall = document.getElementById("status-ball");
-      statusBall.style.display = "inline-block";
+      document.getElementById("status-ball").style.display = "inline-block";
+      document.getElementById("play-btn").style.display = "none";
 
-      const playBtn = document.getElementById("play-btn");
-      playBtn.style.display = "none";
-
-      currentMinute = 0;
-      homeScore = 0;
-      awayScore = 0;
+      currentMinute = 0; homeScore = 0; awayScore = 0;
       document.getElementById("home-score").innerText = "0";
       document.getElementById("away-score").innerText = "0";
-      
+
       const commentaryBox = document.getElementById("commentary-box");
       const minuteDisplay = document.getElementById("match-minute");
-      const activeOpponent = teams[currentOpponentIndex];
-      const userTeam = teams.find(t => t.isUser);
-
-      const userEffPower = userTeam.skill * (userTeam.fitness / 100);
-      const oppEffPower = activeOpponent.skill * (activeOpponent.fitness / 100);
-      const totalPower = userEffPower + oppEffPower;
       
-      const baseHomeChance = 0.16 * (userEffPower / totalPower);
-      const baseAwayChance = 0.16 * (oppEffPower / totalPower);
+      const match = getCurrentUserMatch();
+      const homeTeam = teams.find(t => t.id === match.home);
+      const awayTeam = teams.find(t => t.id === match.away);
 
-      commentaryBox.innerHTML = `<p><strong>0' Hakem düdüğünü çaldı, maç başladı!</strong></p>`;
+      const hPow = homeTeam.skill * (homeTeam.fitness / 100);
+      const aPow = awayTeam.skill * (awayTeam.fitness / 100);
+      const tot = hPow + aPow;
+
+      const baseHomeChance = 0.15 * (hPow / tot);
+      const baseAwayChance = 0.15 * (aPow / tot);
+
+      commentaryBox.innerHTML = `<p><strong>0' Düdük çaldı, maç başladı!</strong></p>`;
 
       matchInterval = setInterval(() => {
         currentMinute += 5;
         minuteDisplay.innerText = currentMinute;
 
+        let chance = Math.random();
         let eventText = "";
-        const chance = Math.random();
 
         if (chance < baseHomeChance) {
           homeScore++;
           document.getElementById("home-score").innerText = homeScore;
-          eventText = `<span style='color:#2ecc71;'>GOL! ${myTeamName} harika bir vuruşla top ağlara gidiyor!</span>`;
+          eventText = `<span style='color:#2ecc71;'>GOL! ${homeTeam.name} harika bir vuruşla topu ağlara yolladı!</span>`;
         } else if (chance < baseHomeChance + baseAwayChance) {
           awayScore++;
           document.getElementById("away-score").innerText = awayScore;
-          eventText = `<span style='color:#ff5555;'>GOL! ${activeOpponent.name} topu ağlara gönderdi!</span>`;
+          eventText = `<span style='color:#ff5555;'>GOL! ${awayTeam.name} tehlikeli atakta golü buldu!</span>`;
         } else {
           eventText = commentaryEvents[Math.floor(Math.random() * commentaryEvents.length)];
         }
@@ -1004,53 +910,39 @@
 
         if (currentMinute >= 90) {
           clearInterval(matchInterval);
+          document.getElementById("status-ball").style.display = "none";
 
-          statusBall.style.display = "none";
-
-          const endP = document.createElement("p");
-          endP.innerHTML = `<strong style="color: #2ecc71;">90' Hakem son düdüğü çaldı! Maç Sonucu: ${homeScore} - ${awayScore}</strong>`;
-          commentaryBox.prepend(endP);
-          
           updatePlayersPostMatch();
-          const finalTable = simulateOtherMatches(homeScore, awayScore);
+          const finalTable = simulateWeekMatches(match, homeScore, awayScore);
 
           if (currentWeek < 22) {
             currentWeek++;
             document.getElementById("week-display").innerText = currentWeek;
-            
-            currentOpponentIndex = (currentOpponentIndex % (teams.length - 1)) + 1;
             updateOpponentDisplay();
-
-            playBtn.innerText = "Sıradaki Maç";
+            document.getElementById("play-btn").innerText = "Sıradaki Maç";
           } else {
             currentWeek = 23;
-            
             if (finalTable.length > 0 && finalTable[0].isUser) {
               championships++;
               renderStars();
-              alert(`TEBRİKLER! ${myTeamName} Zorlu Sezonu ŞAMPİYON Olarak Tamamladı! 🏆`);
+              alert(`TEBRİKLER! ${myTeamName} ŞAMPİYON OLDU! 🏆`);
             } else {
-              alert("Sezon sona erdi. Şampiyonluğu kaçırdınız!");
+              alert("Sezon sona erdi.");
             }
-
-            playBtn.innerText = "Yeni Sezona Başla";
+            document.getElementById("play-btn").innerText = "Yeni Sezona Başla";
           }
-          
-          playBtn.style.display = "inline-block";
+
+          document.getElementById("play-btn").style.display = "inline-block";
           saveGameData();
         }
-      }, 1000);
+      }, 800);
     }
 
     function initGameUI() {
-      document.getElementById("my-team-name-score").innerText = myTeamName;
       document.getElementById("budget-display").innerText = budget;
       document.getElementById("week-display").innerText = currentWeek > 22 ? 22 : currentWeek;
 
-      const playBtn = document.getElementById("play-btn");
-      if (currentWeek > 22) {
-        playBtn.innerText = "Yeni Sezona Başla";
-      }
+      if (currentWeek > 22) document.getElementById("play-btn").innerText = "Yeni Sezona Başla";
 
       renderStars();
       renderPlayers();
@@ -1060,8 +952,7 @@
     }
 
     function initGame() {
-      const hasSave = loadGameData();
-      if (!hasSave) {
+      if (!loadGameData()) {
         document.getElementById("difficulty-modal").style.display = "flex";
       } else {
         initGameUI();
