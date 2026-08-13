@@ -54,10 +54,6 @@ menu:
     url: "/now"
   - title: "Projects"
     url: "/projects"
-  - title: "Github"
-    url: "https://github.com/medincer"
-  - title: "X"
-    url: "https://x.com/medincer"
 
 # Footer
 footer:
