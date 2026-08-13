@@ -54,18 +54,18 @@ menu:
     url: "/now"
   - title: "Projects"
     url: "/projects"
+  - title: "Github"
+    url: "https://github.com/medincer"
+  - title: "X"
+    url: "https://x.com/medincer"
 
 # Footer
 footer:
   copyright: "© 2026 - Mete Dinçer"
   github:
-    enabled: true
+    enabled: false
     url: "https://github.com/medincer"
     text: "Github"
-  x:
-    enabled: true
-    url: "https://x.com/medincer"
-    text: "X"
 
 # Collections
 collections:
