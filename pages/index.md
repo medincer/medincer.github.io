@@ -4,9 +4,9 @@
 
 layout: Post
 permalink: /
-title: Jekyll Garden
+title: Hi / Merhaba 👋
 ---
 
-Jekyll Garden is a simple theme that turns your Obsidian notes into a beautiful website. If you use Obsidian for note-taking, this theme makes it easy to publish your markdown files as a connected website with wiki-style links and full-text search.
+I'm Mete Dinçer, a passionate freelance frontend developer based in Turkey. I specialize in crafting modern, responsive, and user-friendly web experiences, turning creative ideas into clean and efficient code. Whether building custom digital interfaces from scratch or optimizing existing platforms, I am dedicated to delivering web solutions that blend functional design with seamless performance.
 
-Start by reading [[Getting Started]] to set up your own Jekyll Garden. Learn how to use [[Wiki Links]] to connect your notes, explore the [[Markdown Guide]] for formatting, and customize your site with the [[Customization]] guide. When you're ready to share your notes online, follow the [[Deployment]] instructions.
+Ben Mete Dinçer, Türkiye'de yaşayan tutkulu bir freelancer ve frontend geliştiricisiyim. Yaratıcı fikirleri temiz ve etkili kodlara dönüştürerek modern, duyarlı ve kullanıcı dostu web deneyimleri tasarlama konusunda uzmanlaşıyorum. İster sıfırdan özel dijital arayüzler inşa ederken ister mevcut platformları optimize ederken, işlevsel tasarımı kesintisiz performansla buluşturan web çözümleri sunmaya odaklanıyorum.
