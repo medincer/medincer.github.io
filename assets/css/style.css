@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap');
 
 :root {
   --bg: #ffffff;
@@ -8,7 +8,7 @@
   --brand: rgb(58, 169, 159);
   --border: #e8e8e8;
   
-  --font: "Inter", sans-serif;
+  --font: "Roboto Mono", monospaced;
   --weight-medium: 400;
   --weight-bold: 600;
   
