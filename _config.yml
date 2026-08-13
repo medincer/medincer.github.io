@@ -58,10 +58,10 @@ menu:
 # Footer
 footer:
   copyright: "Mete Dinçer © 2026"
-  github:
-    enabled: false
-    url: "https://github.com/medincer"
-    text: "Github"
+  projects:
+    enabled: true
+    url: "/projects"
+    text: "Projects"
 
 # Collections
 collections:
