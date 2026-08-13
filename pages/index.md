@@ -9,5 +9,5 @@ title: Hi 👋
 
 I'm Mete Dinçer, a frontend developer. I'm a freelancer in Bursa, Turkey. I love code, coffee and cats.
 
-<a target="_blank" href="https://github.com/medincer">Github</a>
+<a target="_blank" href="https://github.com/medincer">Github</a><br/>
 <a target="_blank" href="https://x.com/medincer">X</a>
