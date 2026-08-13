@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
 :root {
-  --bg: rgb(255, 252, 240);
+  --bg: #ffffff;
   --bg2: rgb(242, 240, 229);
   --text: #6f6e69;
   --title: #343331;
   --brand: rgb(58, 169, 159);
-  --border: rgb(230, 228, 217);
+  --border: #e8e8e8;
   
   --font: "Inter", sans-serif;
   --weight-medium: 400;
@@ -62,6 +62,7 @@ body {
   color: var(--text);
   background: var(--bg);
   font-size: var(--scale-base);
+  text-transform: lowercase;
 }
 
 .container {
