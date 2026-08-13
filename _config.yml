@@ -58,10 +58,10 @@ menu:
 # Footer
 footer:
   copyright: "Mete Dinçer © 2026"
-  projects:
+  menu:
     enabled: true
+  - title: "Projects"
     url: "/projects"
-    text: "Projects"
 
 # Collections
 collections:
