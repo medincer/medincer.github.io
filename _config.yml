@@ -39,7 +39,7 @@ title: "Mete Dinçer"
 heading: "Mete Dinçer"
 description: "My digital garden."
 url: "https://medincer.github.io"
-baseurl: ""
+baseurl: "https://medincer.github.io"
 
 # Asset Configuration
 apple_touch_icon: "/assets/img/profile.png"
@@ -52,8 +52,8 @@ menu:
     url: "/notes"
   - title: "Blog"
     url: "/blog"
-  - title: "About"
-    url: "/about"
+  - title: "Projects"
+    url: "/projects"
 
 # Footer
 footer:
