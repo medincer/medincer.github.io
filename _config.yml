@@ -1,0 +1,111 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+#
+# If you need help with YAML syntax, here are some quick references for you: 
+# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# https://learnxinyminutes.com/docs/yaml/
+#
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+
+# Jekyll Garden Configuration
+# Optimized for actual template usage
+
+# Preferences (controls template behavior)
+preferences:
+  homepage:
+    enabled: false
+  search:
+    enabled: true
+  backlinks:
+    enabled: true
+  pagepreview:
+    enabled: true
+  wiki_style_link:
+    enabled: true
+
+# Site Configuration
+title: "Your Site Title"
+heading: "Your Name"
+description: "A brief description of your site"
+url: "https://yoursite.com"
+baseurl: ""
+
+# Asset Configuration
+apple_touch_icon: "/assets/img/profile.png"
+css_file: "/assets/css/style.css"
+ie_css: "/assets/css/ie-target.css"
+
+# Menu Items
+menu:
+  - title: "Notes"
+    url: "/notes"
+  - title: "Blog"
+    url: "/blog"
+  - title: "About"
+    url: "/about"
+
+# Footer
+footer:
+  copyright: "© 2024 Your Name. Contents under CC-BY-NC"
+  credits:
+    enabled: true
+    url: "/credits"
+    text: "Credits"
+
+# Collections
+collections:
+  notes:
+    output: true
+    permalink: /:collection/:name
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "notes"
+    values:
+      layout: "Post"
+      content-type: "notes"
+      feed: "show"
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "Post"
+      content-type: "post"
+      feed: "show"
+      permalink: /blog/:title/
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Private links (for broken wiki links)
+privatelinks:
+  title: "Private Note"
+  msg: "This note hasn't been published yet."
+
+# Math rendering
+katex: true
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/

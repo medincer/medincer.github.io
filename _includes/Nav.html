@@ -1,0 +1,48 @@
+<nav class="nav">
+  <div class="nav-left">
+    <a href="{{ site.baseurl }}/">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="8" width="16" height="16" rx="4" />
+      </svg>
+    </a>
+  </div>
+  
+  <div class="nav-right">
+    <div class="dropdown">
+      <div class="hamburger">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 6H21M3 12H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="dropdown-menu">
+        {%- if site.menu -%}
+          {%- for item in site.menu -%}
+            <a href="{{ site.baseurl }}{{ item.url }}">{{ item.title }}</a>
+          {%- endfor -%}
+        {%- else -%}
+          <a href="{{ site.baseurl }}/">About</a>
+          <a href="{{ site.baseurl }}/notes">Notes</a>
+          <a href="{{ site.baseurl }}/about">About</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const hamburger = document.querySelector('.hamburger');
+  const dropdown = document.querySelector('.dropdown');
+  
+  hamburger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    this.classList.toggle('active');
+    dropdown.classList.toggle('active');
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.dropdown')) {
+      hamburger.classList.remove('active');
+      dropdown.classList.remove('active');
+    }
+  });
+</script>

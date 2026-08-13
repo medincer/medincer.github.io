@@ -1,0 +1,56 @@
+{%- assign link_count = 0 -%}
+{%- assign wiki_link_title = '[' | append: page.title | append: ']' -%}
+{%- for note in site.notes -%}
+        {%- if note.url != page.url -%}
+            {%- if note.content contains wiki_link_title -%}
+                {%- assign link_count = link_count | plus:1 -%}
+            {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}
+{%- for note in site.posts -%}
+        {%- if note.url != page.url -%}
+            {%- if note.content contains wiki_link_title -%}
+                {%- assign link_count = link_count | plus:1 -%}
+            {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}
+{%- for note in site.pages -%}
+        {%- if note.url != page.url -%}
+            {%- if note.content contains wiki_link_title -%}
+                {%- assign link_count = link_count | plus:1 -%}
+            {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}
+{%- if link_count > 0 -%}
+{%- assign wiki_link_title = '[' | append: page.title | append: ']' -%}
+{%- assign display_class = 'hide' -%}
+{%- if site.preferences.backlinks.enabled -%}
+{%- assign display_class = 'show' -%}
+{%- endif -%}
+<div class="links-section {{display_class}}" id="jekyll-seamless-backlinks">
+    <h6>Links to this note</h6>
+    <ul class="links-grid">
+        {%- for note in site.notes -%}
+        {%- if note.url != page.url -%}
+            {%- if note.content contains wiki_link_title -%}
+            <li><a href="{{ site.baseurl }}{{note.url}}">{{ note.title }}</a></li>
+            {%- endif -%}
+        {%- endif -%}
+        {%- endfor -%}
+        {%- for note in site.posts -%}
+        {%- if note.url != page.url -%}
+            {%- if note.content contains wiki_link_title -%}
+            <li><a href="{{ site.baseurl }}{{note.url}}">{{ note.title }}</a></li>
+            {%- endif -%}
+        {%- endif -%}
+        {%- endfor -%}
+        {%- for note in site.pages -%}
+        {%- if note.url != page.url -%}
+            {%- if note.content contains wiki_link_title -%}
+            <li><a href="{{ site.baseurl }}{{note.url}}">{{ note.title }}</a></li>
+            {%- endif -%}
+        {%- endif -%}
+        {%- endfor -%}
+    </ul>
+</div>
+{%- endif -%}

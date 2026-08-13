@@ -1,0 +1,43 @@
+<div class="footer">
+  <div class="footer-left">
+    <h6>
+      {{ site.footer.copyright }}
+      {%- if site.footer.credits.enabled -%}
+          • <a href="{{ site.baseurl }}{{ site.footer.credits.url }}">{{ site.footer.credits.text }}</a>
+      {%- endif -%}
+    </h6>
+  </div>
+  <div class="footer-right">
+    <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <svg viewBox="0 0 14 14" width="14" height="14" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="7" cy="7" r="5"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  // Theme toggle
+  const themeToggle = document.querySelector('.theme-toggle');
+  const root = document.documentElement;
+  const body = document.body;
+  
+  function setTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }
+  
+  // Initial theme
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    setTheme(savedTheme);
+  }
+  
+  themeToggle.addEventListener('click', function() {
+    root.classList.add('theme-transition');
+    body.classList.add('theme-transition');
+    
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    setTheme(isDark ? 'light' : 'dark');
+  });
+</script>

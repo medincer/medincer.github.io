@@ -1,0 +1,154 @@
+<div class="content">
+    {{ content | markdownify }}
+</div>
+
+<script>
+// Process wiki links after page load, excluding code blocks
+document.addEventListener('DOMContentLoaded', function() {
+    const contentDiv = document.querySelector('.content');
+    if (!contentDiv) return;
+    
+    // Get all available notes for link resolution
+    const availableNotes = [
+        {%- for note in site.notes -%}
+            {
+                title: "{{ note.title | escape }}",
+                url: "{{ site.baseurl }}{{ note.url }}",
+                excerpt: "{{ note.content | strip_html | normalize_whitespace | truncatewords: 20 | escape }}"
+            }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+    ];
+    
+    // Function to find note by title (case-insensitive)
+    function findNoteByTitle(title) {
+        return availableNotes.find(note => 
+            note.title.toLowerCase() === title.toLowerCase()
+        );
+    }
+    
+    // Function to process wiki links in text nodes only
+    function processWikiLinks(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            // Only process text nodes that are not inside code elements
+            let parent = node.parentElement;
+            while (parent) {
+                if (parent.tagName === 'CODE' || parent.tagName === 'PRE' || 
+                    parent.classList.contains('highlighter-rouge') || 
+                    parent.classList.contains('highlight')) {
+                    return; // Skip if inside code
+                }
+                parent = parent.parentElement;
+            }
+            
+            // Process wiki links in this text node
+            const text = node.textContent;
+            const wikiLinkRegex = /\[\[([^\]]+)\]\]/g;
+            let match;
+            let lastIndex = 0;
+            const fragments = [];
+            
+            while ((match = wikiLinkRegex.exec(text)) !== null) {
+                // Add text before the match
+                if (match.index > lastIndex) {
+                    fragments.push(document.createTextNode(text.slice(lastIndex, match.index)));
+                }
+                
+                const linkText = match[1];
+                const linkSpan = document.createElement('span');
+                
+                // Check if it's an external link (contains ::)
+                if (linkText.includes('::')) {
+                    const [title, url] = linkText.split('::');
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.target = '_blank';
+                    link.rel = 'noopener';
+                    link.textContent = title;
+                    linkSpan.appendChild(link);
+                } else {
+                    // Internal link - try to find the note
+                    const foundNote = findNoteByTitle(linkText);
+                    const link = document.createElement('a');
+                    
+                    if (foundNote) {
+                        link.href = foundNote.url;
+                        link.textContent = linkText;
+                        link.className = 'wiki-link';
+                        
+                        // Add hover preview functionality
+                        link.addEventListener('mouseenter', function() {
+                            showPreview(this, foundNote.title, foundNote.excerpt);
+                        });
+                        
+                        link.addEventListener('mouseleave', function() {
+                            hidePreview();
+                        });
+                    } else {
+                        // Note doesn't exist - create a placeholder
+                        link.href = 'javascript:void(0)';
+                        link.textContent = linkText;
+                        link.className = 'stale-link';
+                        link.title = 'Note not found: ' + linkText;
+                    }
+                    
+                    linkSpan.appendChild(link);
+                }
+                
+                fragments.push(linkSpan);
+                lastIndex = match.index + match[0].length;
+            }
+            
+            // Add remaining text
+            if (lastIndex < text.length) {
+                fragments.push(document.createTextNode(text.slice(lastIndex)));
+            }
+            
+            // Replace the text node with fragments if we found wiki links
+            if (fragments.length > 0) {
+                const parent = node.parentNode;
+                fragments.forEach(fragment => parent.insertBefore(fragment, node));
+                parent.removeChild(node);
+            }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            // Recursively process child nodes
+            const children = Array.from(node.childNodes);
+            children.forEach(child => processWikiLinks(child));
+        }
+    }
+    
+    // Function to show hover preview
+    function showPreview(link, title, excerpt) {
+        // Remove any existing preview
+        hidePreview();
+        
+        const preview = document.createElement('div');
+        preview.className = 'link-preview';
+        preview.innerHTML = `
+            <div class="preview-content">
+                <strong>${title}</strong>
+                <p>${excerpt}</p>
+            </div>
+        `;
+        
+        document.body.appendChild(preview);
+        
+        // Position the preview near the link
+        const rect = link.getBoundingClientRect();
+        preview.style.position = 'fixed';
+        preview.style.left = rect.left + 'px';
+        preview.style.top = (rect.bottom + 5) + 'px';
+        preview.style.zIndex = '1000';
+    }
+    
+    // Function to hide hover preview
+    function hidePreview() {
+        const existingPreview = document.querySelector('.link-preview');
+        if (existingPreview) {
+            existingPreview.remove();
+        }
+    }
+    
+    // Process all nodes in the content
+    processWikiLinks(contentDiv);
+});
+</script> 

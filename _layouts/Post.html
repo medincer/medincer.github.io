@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="{{ site.title | default: site.heading }}" property="og:site_name" />
+    <meta content="{{ site.description | default: 'A Jekyll Garden site' }}" property="og:description">
+    <meta content="{{ site.url }}/about/" property="article:author">
+    {%- if site.og_image -%}
+    <meta property="og:image" content="{{ site.baseurl }}{{ site.og_image }}">
+    {%- endif -%}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    {%- if page.title -%}
+    <meta content="{{ page.title }}" property="og:title">
+    <meta content="article" property="og:type">
+    <meta content="{{ site.url }}{{ page.url }}" property="og:url">
+    {%- else -%}
+    <meta content="website" property="og:type">
+    <meta content="{{ site.url }}{{ page.url }}" property="og:url">
+    {%- endif -%}
+
+    <title>{%- if page.title -%}{{ page.title }} - {%- endif -%}{{ site.heading }}</title>
+    <link rel="canonical" href="{{site.url}}{{page.url}}" />
+    {%- if site.apple_touch_icon -%}
+    <link rel="apple-touch-icon" href="{{ site.baseurl }}{{ site.apple_touch_icon }}">
+    {%- endif -%}
+    {%- if site.favicon -%}
+    <link rel="icon" href="{{ site.baseurl }}{{ site.favicon }}" type="image/svg+xml" sizes="any" />
+    {%- endif -%}
+    {%- if site.css_file -%}
+    <link href="{{ site.baseurl }}{{ site.css_file }}" rel="stylesheet" media="all" class="default" />
+    {%- else -%}
+    <link href="{{ site.baseurl }}/assets/css/style.css" rel="stylesheet" media="all" class="default" />
+    {%- endif -%}
+    {%- if site.katex -%}
+    <link href="{{ site.baseurl }}/assets/css/vendor/Katex.css" rel="stylesheet" media="all" class="default" />
+    {%- endif -%}
+
+    <!--[if IE]>
+        {%- if site.ie_css -%}
+        <link href="{{ site.baseurl }}{{ site.ie_css }}" rel="stylesheet" type="text/css"/>
+        {%- else -%}
+        <link href="{{ site.baseurl }}/assets/css/ie-target.css" rel="stylesheet" type="text/css"/>
+        {%- endif -%}
+    <![endif]-->
+    <!--<link href="/assets/css/prism.css" rel="stylesheet" />-->
+    <link rel="alternate" type="application/rss+xml" href="{{ site.url }}/feed.xml">
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            {%- include Nav.html -%}
+            
+            <!-- Homepage Layout-->
+            {%- if page.permalink == "/" -%}
+                {%- if site.preferences.homepage.enabled -%}
+                    <!--- Show content from index.md when homepage is enabled -->
+                    {%- include Content.html -%}
+                {%- else -%}
+                    <!--- Show content from notes.md + search + feed when homepage is disabled -->
+                    <h1>{{page.title}}</h1>
+                    {%- include Content.html -%}
+                    {%- include Search.html -%}
+                    {%- include Feed.html -%}
+                {%- endif -%}
+            {%- endif -%}
+
+            <!--- Notes Feed Layout-->
+            {%- if page.permalink == "/notes" -%}
+                <h1>{{page.title}}</h1>
+                {%- include Content.html -%}
+                {%- include Search.html -%}
+                {%- include Feed.html -%}
+            {%- endif -%}
+
+            <!--- Notes Layout-->
+            {%- if page.content-type == "notes" -%}
+                <h1>{{page.title}}</h1>
+                {%- include Content.html -%}
+                {%- if site.preferences.backlinks.enabled -%}
+                {%- include Backlinks.html -%}
+                {%- endif -%}
+            {%- endif -%}
+
+             <!--- Post Layout-->
+             {%- if page.content-type == "post"  -%}
+                 <h1>{{page.title}}</h1>
+                 {%- include Content.html -%}
+                 {%- if site.preferences.backlinks.enabled -%}
+                 {%- include Backlinks.html -%}
+                 {%- endif -%}
+             {%- endif -%}
+
+            <!--- Static Page Layout-->
+            {%- if page.content-type == "static" -%}
+                <h1>{{page.title}}</h1>                        
+                {%- include Content.html -%}
+            {%- endif -%}
+            
+            <!--- Blog Feed Layout-->
+            {%- if page.permalink == "/blog" -%}
+                <div class="related-wrapper">
+                {% assign post_items = site.posts | sort: "date" | reverse %}
+                {% for post_items in post_items %}
+                    {%- if post_items.feed == "show" -%}
+                            <div class="notelist-feed">
+                                <a href="{{ site.baseurl }}{{post_items.url}}">
+                                    <p>{{ post_items.title }}</p>
+                                </a>
+                            </div>
+                    {%- endif -%}
+                {%- endfor -%}
+                </div>
+            {%- endif -%}
+
+            {%- include Footer.html -%}
+        </div>
+    </div>
+</body>
+</html> 
