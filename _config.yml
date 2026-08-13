@@ -50,8 +50,8 @@ ie_css: "/assets/css/ie-target.css"
 menu:
   - title: "Notes"
     url: "/notes"
-  - title: "Blog"
-    url: "/blog"
+  - title: "Now"
+    url: "/now"
   - title: "Projects"
     url: "/projects"
 
