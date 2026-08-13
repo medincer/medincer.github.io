@@ -7,7 +7,7 @@ permalink: /
 title: Hi 👋
 ---
 
-I'm Mete Dinçer, a frontend developer based in Turkey. I specialize in building modern, responsive, and user-friendly web interfaces that bring creative ideas to life with clean code.
+I'm Mete Dinçer, a frontend developer. I'm a freelancer in Turkey. I love cats, coffee, and code. 🐱
 
 <a target="_blank" href="https://github.com/medincer">Github</a>
 <a target="_blank" href="https://x.com/medincer">X</a>
