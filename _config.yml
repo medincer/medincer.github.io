@@ -59,7 +59,6 @@ menu:
 footer:
   copyright: "Mete Dinçer © 2026"
   menu:
-    enabled: true
   - title: "Projects"
     url: "/projects"
 
