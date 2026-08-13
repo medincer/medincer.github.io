@@ -35,10 +35,10 @@ preferences:
     enabled: true
 
 # Site Configuration
-title: "Your Site Title"
-heading: "Your Name"
-description: "A brief description of your site"
-url: "https://yoursite.com"
+title: "Mete Dinçer"
+heading: "Mete Dinçer"
+description: "My digital garden."
+url: "https://medincer.github.io"
 baseurl: ""
 
 # Asset Configuration
@@ -57,16 +57,16 @@ menu:
 
 # Footer
 footer:
-  copyright: "© 2024 Your Name. Contents under CC-BY-NC"
+  copyright: "© 2026 - Mete Dinçer"
   credits:
-    enabled: true
+    enabled: false
     url: "/credits"
     text: "Credits"
 
 # Collections
 collections:
   notes:
-    output: true
+    output: false
     permalink: /:collection/:name
 
 # Defaults
