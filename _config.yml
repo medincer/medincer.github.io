@@ -59,9 +59,11 @@ menu:
 footer:
   copyright: "© 2026 - Mete Dinçer"
   credits:
-    enabled: false
-    url: "/credits"
-    text: "Credits"
+    enabled: true
+    url: "https://github.com/medincer"
+    text: "Github"
+    url: "https://x.com/medincer"
+    text: "X"
 
 # Collections
 collections:
