@@ -1,7 +1,8 @@
 ---
-title: Hello World!
+title: Hello world!
 feed: show
-date: 2026-08-13
+date: 2026-08-12
 ---
 
+12-08-2026
 Welcome to my digital garden. 🌱
