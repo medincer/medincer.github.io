@@ -18,7 +18,7 @@
   --space-lg: 2rem;
   --space-xl: 3rem;
   
-  --max-width: 48rem;
+  --max-width: 500px;
   --line-height: 1.5;
   
   /* 5-level typography scale (1rem = 15px) */
@@ -714,7 +714,7 @@ td {
   line-height: 1.4;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .container {
     padding-top: var(--space-md);
   }
