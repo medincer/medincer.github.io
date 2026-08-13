@@ -62,7 +62,6 @@ body {
   color: var(--text);
   background: var(--bg);
   font-size: var(--scale-base);
-  text-transform: lowercase;
 }
 
 .container {
