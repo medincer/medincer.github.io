@@ -57,7 +57,7 @@ menu:
 
 # Footer
 footer:
-  copyright: "© 2026 - Mete Dinçer"
+  copyright: "Mete Dinçer © 2026"
   github:
     enabled: false
     url: "https://github.com/medincer"
